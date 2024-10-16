@@ -426,4 +426,7 @@ formatResume(resume), }); /** * Wait for animatable-component to be loaded (Only
 for VanillaJS) **/ function animatableLoaded() {
 document.querySelector("body").classList.remove("d-none"); } if (customElements)
 { customElements.whenDefined("animatable-component").then(animatableLoaded); }
-else animatableLoaded();
+else animatableLoaded(); //////////////////////////////////////// { "hosting": {
+"public": "public", "ignore": [ "firebase.json", "**/.*", "**/node_modules/**"
+], "rewrites": [ { "source": "**", "destination": "/index.html" } ] } }
+/////////////////////////////////////////
