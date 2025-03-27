@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import RotatingImage from "../rotar/rotar";
-import LogoFerrequipos from "../../assets/Rey.png";
+import Logos from "../../assets/MiNegocio.png";
 
 const LoadingLogo = () => {
   return (
@@ -15,7 +15,7 @@ const LoadingLogo = () => {
     >
       <Box mb={1}>
         <RotatingImage
-          src={LogoFerrequipos}
+          src={Logos}
           alt="Rotating Logo"
           style={{ width: "100px", height: "100px", marginBottom: "2px" }}
         />

@@ -5,7 +5,7 @@ import {
   AdminForms,
   VistaCotizacion,
   VistaCuentaDeCobro,
-  VistaDb,
+  VistaCreaEquipo,
   VistaEditarEquipo,
   VistaEliminarEquipo,
 } from "./Views";
@@ -47,14 +47,14 @@ function App() {
           }
         />
         <Route
-          path="/vistabasedatos"
+          path="/vistacreaequipo"
           element={
             <ProtectedRoutes>
-              <VistaDb />
+              <VistaCreaEquipo />
             </ProtectedRoutes>
           }
         />
-        {/* <Route
+        <Route
           exact
           path="/vistaeliminarequipo/:name"
           element={
@@ -62,21 +62,23 @@ function App() {
               <VistaEliminarEquipo />
             </ProtectedRoutes>
           }
-        /> */}
+        />
         <Route
           path="/vistaeliminarequipo"
           element={
-            // <ProtectedRoutes>
-            <VistaEliminarEquipo />
-            // </ProtectedRoutes>
+            <ProtectedRoutes>
+              <VistaEliminarEquipo />
+              //{" "}
+            </ProtectedRoutes>
           }
         />
         <Route
           path="/vistaeditarequipo"
           element={
-            // <ProtectedRoutes>
-            <VistaEditarEquipo />
-            // </ProtectedRoutes>
+            <ProtectedRoutes>
+              <VistaEditarEquipo />
+              //{" "}
+            </ProtectedRoutes>
           }
         />
         {/* <Route path="/" element={<Landing />} /> */}

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import LogoRey from "../../assets/Rey.png";
+import Logos from "../../assets/MiNegocio.png";
 import {
   Container,
   Typography,
@@ -37,7 +37,7 @@ export default function VistaCcWeb() {
         }}
       >
         <img
-          src={LogoRey}
+          src={Logos}
           alt="Logo"
           style={{
             width: isSmallScreen ? "80px" : "100px",
@@ -54,7 +54,7 @@ export default function VistaCcWeb() {
             color="primary"
             sx={{ fontSize: isSmallScreen ? "16px" : "18px" }}
           >
-            FERREQUIPOS DE LA COSTA
+            Nombre de Tu Negocio
           </Typography>
           <Typography
             variant="body1"
@@ -64,9 +64,9 @@ export default function VistaCcWeb() {
               margin: "10px 0",
             }}
           >
-            Alquiler de equipos para la construcción
+            Sector o Actividad del Negocio
             <br />
-            Nit: 22.736.950 - 1
+            Nit: 72.987.654 - 1
           </Typography>
         </Box>
       </Box>
@@ -79,7 +79,7 @@ export default function VistaCcWeb() {
           textAlign: "center",
         }}
       >
-        Barranquilla, {formValues.value.fecha}
+        Ciudad, {formValues.value.fecha}
       </Typography>
 
       <Typography
@@ -122,7 +122,7 @@ export default function VistaCcWeb() {
           textAlign: "center",
         }}
       >
-        Obra: {formValues.value.obra}
+        Empresa: {formValues.value.obra}
       </Typography>
 
       <Typography
@@ -146,7 +146,7 @@ export default function VistaCcWeb() {
           margin: "20px 0",
         }}
       >
-        FERREQUIPOS DE LA COSTA
+        Nonbre de tu Negocio
       </Typography>
 
       <Typography
@@ -225,13 +225,13 @@ export default function VistaCcWeb() {
           marginTop: "20px",
         }}
       >
-        Kra 38 # 108 – 23 Tel 2511118 - 3116576633 - 3106046465
+        Kra 45 # 208 – 33 Tel 2511118 - 3001234595 - 3123456789
         <br />
-        Ferrequipos07@hotmail.com
+        tuCorreo@hotmail.com
         <br />
-        Ferrequiposdelacosta.com
+        Tu Sitio Web
         <br />
-        BARRANQUILLA - COLOMBIA
+        CIUDAD - PAIS
       </Typography>
     </Container>
   );

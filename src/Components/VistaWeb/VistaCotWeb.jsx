@@ -155,7 +155,7 @@
 // }
 
 import { useSelector } from "react-redux";
-import LogoRey from "../../assets/Rey.png";
+import Logos from "../../assets/MiNegocio.png";
 import { Box, Typography, Grid, useTheme, useMediaQuery } from "@mui/material";
 
 export default function VistaCotWeb() {
@@ -189,7 +189,7 @@ export default function VistaCotWeb() {
       >
         <Grid item>
           <img
-            src={LogoRey}
+            src={Logos}
             alt="Logo"
             style={{
               width: isSmallScreen ? "60px" : "100px",

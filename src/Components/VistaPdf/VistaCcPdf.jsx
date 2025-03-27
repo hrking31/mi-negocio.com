@@ -182,7 +182,7 @@
 // export default VistaCcPdf;
 
 import React from "react";
-import LogoRey from "../../assets/Rey.png";
+import Logos from "../../assets/MiNegocio.png";
 
 import {
   Page,
@@ -297,7 +297,7 @@ const VistaCcPdf = ({ values }) => {
       <Page size="letter" style={styles.page}>
         <View style={styles.header}>
           <View style={styles.logo}>
-            <Image style={styles.logo} src={LogoRey} />
+            <Image style={styles.logo} src={Logos} />
           </View>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>FERREQUIPOS DE LA COSTA</Text>

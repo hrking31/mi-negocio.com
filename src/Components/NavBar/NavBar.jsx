@@ -12,7 +12,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import LogoFerrequipos from "../../assets/Rey.png";
+import Logos from "../../assets/MiNegocio.png";
 
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -42,7 +42,7 @@ export default function MenuAppBar() {
             <Box>
               <NavLink to="/home">
                 <img
-                  src={LogoFerrequipos}
+                  src={Logos}
                   alt="logo"
                   style={{
                     display: "flex",

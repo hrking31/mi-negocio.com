@@ -13,14 +13,18 @@ import { useAuth } from "../../Context/AuthContext";
 import { Link } from "react-router-dom";
 import { storage } from "../../Components/Firebase/Firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { fetchformData } from "../../Store/Actions/formAction";
-import { setFormValues, updateImage } from "../../Store/Slices/formSlice";
-import style from "./VistaDb.module.css";
+import {
+  fetchformData,
+  setFormValues,
+  updateImage,
+  resetForm,
+} from "../../Store/Slices/formSlice";
+import style from "./VistaCreaEquipo.module.css";
 
 export default function AdminForms() {
   const { user, logout } = useAuth();
-  const formValues = useSelector((state) => state.form.values);
-  const imageUrl = useSelector((state) => state.form.values.images);
+  const formValues = useSelector((state) => state.form);
+  const imageUrl = useSelector((state) => state.form.images);
   const dispatch = useDispatch();
 
   const [file, setFile] = useState(null);
@@ -36,25 +40,33 @@ export default function AdminForms() {
     dispatch(setFormValues(updatedFormValues));
   };
 
-  const resetForm = () => {
-    dispatch(setFormValues({ name: "", description: "", images: [] }));
-    setFile(null);
-    setNameImage("");
-  };
-
   const handlerSubmit = async (event) => {
     event.preventDefault();
-    if (!formValues.name || !formValues.description || !imageUrl.length) {
+
+    if (
+      !formValues.name ||
+      !formValues.description ||
+      formValues.images.length === 0
+    ) {
       setSnackbarMessage("Por favor completa todos los campos del formulario.");
       setSnackbarSeverity("warning");
       setOpenSnackbar(true);
       return;
     }
-    dispatch(fetchformData(formValues));
-    setSnackbarMessage("Equipo creado exitosamente!");
-    setSnackbarSeverity("success");
-    setOpenSnackbar(true);
-    resetForm();
+
+    try {
+      await dispatch(fetchformData(formValues)).unwrap(); 
+
+      setSnackbarMessage("Equipo creado exitosamente!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+      dispatch(resetForm()); 
+    } catch (error) {
+      console.error("Error al crear el equipo:", error); 
+      setSnackbarMessage("Error al crear el equipo. Inténtalo de nuevo.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    }
   };
 
   async function uploadFile(file, nameImage) {
@@ -63,8 +75,9 @@ export default function AdminForms() {
     }
 
     try {
+      const folderName = formValues.name.replace(/\s+/g, "_");
       const uniqueName = `${nameImage}-${Date.now()}`;
-      const storageRef = ref(storage, uniqueName);
+      const storageRef = ref(storage, `${folderName}/${uniqueName}`);
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
       return { url: downloadURL, name: uniqueName };
@@ -141,6 +154,90 @@ export default function AdminForms() {
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
+            {/* ////////////////////////////////////////////////// */}
+            <TextField
+              type="text"
+              name="name"
+              onChange={handlerInputChange}
+              value={formValues.name}
+              label="Nombre del equipo"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+                sx: {
+                  display: "flex",
+                  alignItems: "center",
+                  height: "100%",
+                  color: "#8B3A3A",
+                },
+              }}
+              InputProps={{
+                sx: {
+                  color: "#8B3A3A",
+                },
+              }}
+              margin="normal"
+              sx={{
+                mt: 1,
+                fontSize: "0.75rem",
+                "& .MuiInputBase-input": {
+                  padding: "6px 12px",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#00008B",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#4682B4",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1E90FF",
+                  },
+                },
+              }}
+            />
+            <TextField
+              name="description"
+              onChange={handlerInputChange}
+              value={formValues.description}
+              label="Descripción del equipo"
+              multiline
+              rows={6}
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+                sx: {
+                  display: "flex",
+                  height: "100%",
+                  color: "#8B3A3A",
+                },
+              }}
+              InputProps={{
+                sx: {
+                  color: "#8B3A3A",
+                },
+              }}
+              margin="normal"
+              sx={{
+                mt: 1,
+                fontSize: "0.75rem",
+                "& .MuiInputBase-input": {
+                  padding: "6px 12px",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#00008B",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#4682B4",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1E90FF",
+                  },
+                },
+              }}
+            />
+            {/* /////////////////////////////////////////// */}
             <Box
               sx={{
                 display: "flex",
@@ -259,88 +356,8 @@ export default function AdminForms() {
             >
               SUBIR IMAGENES
             </Button>
-            <TextField
-              type="text"
-              name="name"
-              onChange={handlerInputChange}
-              value={formValues.name}
-              label="Nombre del equipo"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-                sx: {
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                  color: "#8B3A3A",
-                },
-              }}
-              InputProps={{
-                sx: {
-                  color: "#8B3A3A",
-                },
-              }}
-              margin="normal"
-              sx={{
-                mt: 1,
-                fontSize: "0.75rem",
-                "& .MuiInputBase-input": {
-                  padding: "6px 12px",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#00008B",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#4682B4",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1E90FF",
-                  },
-                },
-              }}
-            />
-            <TextField
-              name="description"
-              onChange={handlerInputChange}
-              value={formValues.description}
-              label="Descripción del equipo"
-              multiline
-              rows={6}
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-                sx: {
-                  display: "flex",
-                  height: "100%",
-                  color: "#8B3A3A",
-                },
-              }}
-              InputProps={{
-                sx: {
-                  color: "#8B3A3A",
-                },
-              }}
-              margin="normal"
-              sx={{
-                mt: 1,
-                fontSize: "0.75rem",
-                "& .MuiInputBase-input": {
-                  padding: "6px 12px",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#00008B",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#4682B4",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1E90FF",
-                  },
-                },
-              }}
-            />
+
+            {/* //////////////////////////////////////////// */}
           </Grid>
           <Grid item xs={12} md={6}>
             <Box

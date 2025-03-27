@@ -9,9 +9,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import EmailIcon from "@mui/icons-material/Email";
-import LogoRey from "../../assets/Rey.png";
 import { StyleTypography, StyleNameTypography } from "./DetailEquiposStyled";
-import RotatingImage from "../../Components/rotar/rotar";
 
 export default function Detail() {
   const { name } = useParams();
@@ -125,7 +123,7 @@ export default function Detail() {
               },
             }}
             component="a"
-            href="https://wa.me/3116576633"
+            href="https://wa.me/3028446805"
             target="_blank"
           >
             <WhatsAppIcon sx={{ marginRight: 1 }} />
@@ -170,7 +168,7 @@ export default function Detail() {
               },
             }}
           >
-            Alquiler de Equipos para La Construcción
+            Sector o Actividad del Negocio (Venta y Reparación de Tecnología)
           </Typography>
           <Typography
             variant="body1"
@@ -181,8 +179,8 @@ export default function Detail() {
               color: "blue",
             }}
           >
-            ANDAMIOS, CHAZAS, PARALES, ELABORACIÓN DE REJAS EN HIERRO Y
-            ALUMINIO, TODO EN SOLDADURA.
+            Productos o Servicios Principales. (Venta de celulares, accesorios,
+            laptops y servicio técnico.)
           </Typography>
         </Box>
         <Box
@@ -194,7 +192,7 @@ export default function Detail() {
         >
           <IconButton
             component="a"
-            href="mailto:ferrequipos07@hotmail.com"
+            href="mailto:hrking31@gmail.com"
             target="_blank"
           >
             <EmailIcon fontSize="large" sx={{ color: "#0072C6" }} />

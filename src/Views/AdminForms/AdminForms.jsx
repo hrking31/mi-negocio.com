@@ -64,7 +64,7 @@ export default function AdminForms() {
         <Grid item xs={12} sm={6} md={4}>
           <Button
             component={Link}
-            to="/vistabasedatos"
+            to="/vistacreaequipo"
             variant="contained"
             fullWidth
             sx={{
