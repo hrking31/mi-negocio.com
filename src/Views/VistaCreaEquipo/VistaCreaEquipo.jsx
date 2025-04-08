@@ -102,6 +102,11 @@ export default function VistaCreaEquipo() {
     }
   };
 
+  const handleCancel = () => {
+    setFormValues({ name: "", description: "" }); // Limpia los campos
+    setImages([]); // Borra las imágenes
+  };
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
@@ -224,6 +229,23 @@ export default function VistaCreaEquipo() {
               }}
             >
               CREAR EQUIPO
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Button
+              onClick={handleCancel}
+              variant="contained"
+              fullWidth
+              sx={{
+                height: "45px",
+                color: "#ffffff",
+                backgroundColor: "#1E90FF",
+                "&:hover": {
+                  backgroundColor: "#d32f2f",
+                },
+              }}
+            >
+              CANCELAR
             </Button>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
