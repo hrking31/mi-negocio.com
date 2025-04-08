@@ -8,265 +8,137 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../../Context/AuthContext";
 import { Link } from "react-router-dom";
-import { storage } from "../../Components/Firebase/Firebase";
+import { storage, db } from "../../Components/Firebase/Firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {
-  fetchformData,
-  setFormValues,
-  updateImage,
-  resetForm,
-} from "../../Store/Slices/formSlice";
+import { collection, addDoc } from "firebase/firestore";
 import style from "./VistaCreaEquipo.module.css";
 
-export default function AdminForms() {
+export default function VistaCreaEquipo() {
   const { user, logout } = useAuth();
-  const formValues = useSelector((state) => state.form);
-  const imageUrl = useSelector((state) => state.form.images);
-  const dispatch = useDispatch();
 
-  const [file, setFile] = useState(null);
-  const [nameImage, setNameImage] = useState("");
-  const [openFormSnackbar, setOpenFormSnackbar] = useState(false);
+  const [formValues, setFormValues] = useState({ name: "", description: "" });
+  const [images, setImages] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handlerInputChange = (event) => {
     const { name, value } = event.target;
-    const updatedFormValues = { ...formValues, [name]: value };
-    dispatch(setFormValues(updatedFormValues));
+    setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlerSubmit = async (event) => {
-    event.preventDefault();
-
-    if (
-      !formValues.name ||
-      !formValues.description ||
-      formValues.images.length === 0
-    ) {
-      setSnackbarMessage("Por favor completa todos los campos del formulario.");
-      setSnackbarSeverity("warning");
-      setOpenSnackbar(true);
-      return;
-    }
-
-    try {
-      await dispatch(fetchformData(formValues)).unwrap(); 
-
-      setSnackbarMessage("Equipo creado exitosamente!");
-      setSnackbarSeverity("success");
-      setOpenSnackbar(true);
-      dispatch(resetForm()); 
-    } catch (error) {
-      console.error("Error al crear el equipo:", error); 
-      setSnackbarMessage("Error al crear el equipo. Inténtalo de nuevo.");
-      setSnackbarSeverity("error");
-      setOpenSnackbar(true);
-    }
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+      // name: file.name,
+      name: "",
+    }));
+    setImages((prev) => [...prev, ...newImages]);
   };
 
-  async function uploadFile(file, nameImage) {
-    if (!file || !nameImage) {
-      throw new Error("File or nameImage is missing");
-    }
+  const handleNameChange = (index, newName) => {
+    setImages((prevImages) =>
+      prevImages.map((img, i) =>
+        i === index ? { ...img, name: newName } : img
+      )
+    );
+  };
 
-    try {
-      const folderName = formValues.name.replace(/\s+/g, "_");
-      const uniqueName = `${nameImage}-${Date.now()}`;
+  const handleRemoveImage = (indexToRemove) => {
+    setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleUploadImages = async () => {
+    const folderName = formValues.name.replace(/\s+/g, "_");
+
+    const uploadPromises = images.map(async (img) => {
+      const uniqueName = `${img.name}-${Date.now()}`; // debe estar DENTRO del map
       const storageRef = ref(storage, `${folderName}/${uniqueName}`);
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, img.file);
       const downloadURL = await getDownloadURL(storageRef);
-      return { url: downloadURL, name: uniqueName };
-    } catch (error) {
-      throw new Error("Error uploading file: " + error.message);
-    }
-  }
+      return { name: img.name, url: downloadURL };
+    });
 
-  const handleFileUpload = async () => {
-    if (!file) {
-      setSnackbarMessage("Por favor selecciona un archivo para subir.");
-      setSnackbarSeverity("warning");
-      setOpenSnackbar(true);
-      return;
-    }
+    return await Promise.all(uploadPromises);
+  };
 
-    if (!nameImage) {
-      setSnackbarMessage("Por favor ingresa un nombre para el archivo.");
-      setSnackbarSeverity("warning");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { name, description } = formValues;
+
+    if (!name || !description || images.length === 0) {
+      setSnackbarMessage("Todos los campos son obligatorios.");
+      setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
     try {
-      const { url, name } = await uploadFile(file, nameImage);
-      dispatch(updateImage({ url, name }));
-      setSnackbarMessage(`${name} Creado Exitosamente!!!!`);
+      const uploadedImages = await handleUploadImages();
+
+      const data = {
+        name,
+        description,
+        images: uploadedImages,
+        nameLowerCase: name.toLowerCase(),
+      };
+
+      await addDoc(collection(db, "equipos"), data);
+
+      setSnackbarMessage("Equipo creado exitosamente.");
       setSnackbarSeverity("success");
-    } catch (error) {
-      setSnackbarMessage(
-        `Error al Subir el Archivo ${nameImage}. Intenta de Nuevo!`
-      );
-      setSnackbarSeverity("error");
-    } finally {
       setOpenSnackbar(true);
-      setFile(null);
-      setNameImage("");
-      document.getElementById("file-upload").value = "";
+
+      setFormValues({ name: "", description: "" });
+      setImages([]);
+    } catch (error) {
+      setSnackbarMessage(`Error: ${error.message}`);
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     }
-  };
-
-  function changeHandlerFile(event) {
-    setFile(event.target.files[0]);
-  }
-
-  function changeHandlerName(event) {
-    const newName = event.target.value;
-    setNameImage(newName);
-  }
-
-  const handlerLogout = async () => {
-    await logout();
   };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
-  const handleCloseFormSnackbar = () => {
-    setOpenFormSnackbar(false);
+  const handlerLogout = async () => {
+    await logout();
   };
 
   return (
-    <form onSubmit={handlerSubmit}>
+    <form onSubmit={handleSubmit}>
       <Box sx={{ padding: 2, textAlign: "center" }}>
-        <Box sx={{ marginBottom: 4 }}>
-          <Typography
-            variant="h4"
-            sx={{ color: "#8B3A3A", fontWeight: "bold" }}
-          >
-            Bienvenida {user.email},
-          </Typography>
-        </Box>
-
+        <Typography
+          variant="h4"
+          sx={{ color: "#8B3A3A", fontWeight: "bold", mb: 4 }}
+        >
+          Bienvenido/a {user?.email}
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
-            {/* ////////////////////////////////////////////////// */}
             <TextField
-              type="text"
               name="name"
-              onChange={handlerInputChange}
-              value={formValues.name}
               label="Nombre del equipo"
+              value={formValues.name}
+              onChange={handlerInputChange}
               fullWidth
-              InputLabelProps={{
-                shrink: true,
-                sx: {
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                  color: "#8B3A3A",
-                },
-              }}
-              InputProps={{
-                sx: {
-                  color: "#8B3A3A",
-                },
-              }}
               margin="normal"
-              sx={{
-                mt: 1,
-                fontSize: "0.75rem",
-                "& .MuiInputBase-input": {
-                  padding: "6px 12px",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#00008B",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#4682B4",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1E90FF",
-                  },
-                },
-              }}
             />
             <TextField
               name="description"
-              onChange={handlerInputChange}
-              value={formValues.description}
               label="Descripción del equipo"
-              multiline
-              rows={6}
+              value={formValues.description}
+              onChange={handlerInputChange}
               fullWidth
-              InputLabelProps={{
-                shrink: true,
-                sx: {
-                  display: "flex",
-                  height: "100%",
-                  color: "#8B3A3A",
-                },
-              }}
-              InputProps={{
-                sx: {
-                  color: "#8B3A3A",
-                },
-              }}
+              multiline
+              rows={4}
               margin="normal"
-              sx={{
-                mt: 1,
-                fontSize: "0.75rem",
-                "& .MuiInputBase-input": {
-                  padding: "6px 12px",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#00008B",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#4682B4",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1E90FF",
-                  },
-                },
-              }}
             />
-            {/* /////////////////////////////////////////// */}
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                mt: 2,
-              }}
-            >
-              {file ? (
-                <img
-                  className={style.previewImage}
-                  src={file ? URL.createObjectURL(file) : ""}
-                  alt="Vista previa de la imagen"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    // objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <Typography
-                  variant="h5"
-                  sx={{ color: "#8B3A3A", fontWeight: "bold" }}
-                >
-                  Selecciona una Imagen.
-                </Typography>
-              )}
-            </Box>
-
             <Box
               sx={{
                 display: "flex",
@@ -279,12 +151,14 @@ export default function AdminForms() {
                   variant="contained"
                   component="span"
                   sx={{
+                    height: "45px",
                     color: "#ffffff",
                     backgroundColor: "#1E90FF",
                     "&:hover": {
                       backgroundColor: "#4682B4",
                     },
                     mt: 2,
+                    mb: 2,
                   }}
                 >
                   Selecciona Imagen
@@ -294,174 +168,46 @@ export default function AdminForms() {
                 id="file-upload"
                 type="file"
                 name="fotos"
-                onChange={changeHandlerFile}
+                onChange={handleImageChange}
                 style={{ display: "none" }}
               />
             </Box>
 
-            <TextField
-              type="text"
-              name="name"
-              onChange={changeHandlerName}
-              value={nameImage}
-              label="Nombre de la imagen"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-                sx: {
-                  display: "flex",
-                  alignItems: "center",
-                  height: "100%",
-                  color: "#8B3A3A",
-                },
-              }}
-              InputProps={{
-                sx: {
-                  color: "#8B3A3A",
-                },
-              }}
-              margin="normal"
-              sx={{
-                mt: 1,
-                fontSize: "0.75rem",
-                "& .MuiInputBase-input": {
-                  padding: "6px 12px",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#00008B",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#4682B4",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1E90FF",
-                  },
-                },
-              }}
-            />
-            <Button
-              type="button"
-              onClick={handleFileUpload}
-              variant="contained"
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-                marginBottom: 2,
-              }}
-            >
-              SUBIR IMAGENES
-            </Button>
-
-            {/* //////////////////////////////////////////// */}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              {imageUrl &&
-                imageUrl.map(({ url }, index) => (
-                  <Box key={index} sx={{ textAlign: "center", mb: 2 }}>
-                    <img
-                      className={style.previewImage}
-                      src={url}
-                      alt={`Vista previa ${index + 1}`}
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                        // objectFit: "cover",
-                        // marginBottom: "10px",
-                      }}
-                    />
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <TextField
-                        type="text"
-                        readOnly
-                        value={
-                          imageUrl && Array.isArray(imageUrl) && imageUrl[index]
-                            ? imageUrl[index].name
-                            : `Nombre no disponible ${index + 1}`
-                        }
-                        fullWidth
-                        margin="normal"
-                        sx={{
-                          mt: 1,
-                          fontSize: "0.75rem",
-                          "& .MuiInputBase-input": {
-                            padding: "6px 12px",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "#00008B",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "#4682B4",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#1E90FF",
-                            },
-                          },
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                ))}
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              {imageUrl &&
-                imageUrl.map(({ url }, index) => (
-                  <TextField
-                    key={index}
-                    type="text"
-                    readOnly
-                    placeholder={`URL imagen ${index + 1}...`}
-                    value={url || ""}
-                    fullWidth
-                    margin="normal"
-                    sx={{
-                      mt: 1,
-                      fontSize: "0.75rem",
-                      "& .MuiInputBase-input": {
-                        padding: "6px 12px",
-                      },
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "#00008B",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "#4682B4",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#1E90FF",
-                        },
-                      },
-                    }}
-                  />
-                ))}
-            </Box>
+            {images.map((img, index) => (
+              <Box
+                key={img.id}
+                sx={{ mb: 2, mt: 2, display: "flex", alignItems: "center" }}
+              >
+                <img
+                  src={img.preview}
+                  alt={`preview-${index}`}
+                  className={style.previewImage}
+                  style={{ width: 80, height: 80, marginRight: 10 }}
+                />
+                <TextField
+                  label="Nombre de la imagen"
+                  value={img.name}
+                  onChange={(e) => handleNameChange(index, e.target.value)}
+                  size="small"
+                  sx={{ flexGrow: 1, mr: 2 }}
+                />
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleRemoveImage(index)}
+                  sx={{
+                    marginLeft: 2,
+                    width: "200px",
+                    height: "45px",
+                  }}
+                >
+                  Eliminar
+                </Button>
+              </Box>
+            ))}
           </Grid>
         </Grid>
+
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} sm={6} md={4}>
             <Button
@@ -518,19 +264,15 @@ export default function AdminForms() {
         </Grid>
         <Snackbar
           open={openSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={4000}
           onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={openFormSnackbar}
-          autoHideDuration={6000}
-          onClose={handleCloseFormSnackbar}
-        >
-          <Alert onClose={handleCloseFormSnackbar} severity={snackbarSeverity}>
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbarSeverity}
+            sx={{ width: "100%" }}
+          >
             {snackbarMessage}
           </Alert>
         </Snackbar>

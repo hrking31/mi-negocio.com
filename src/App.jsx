@@ -68,7 +68,6 @@ function App() {
           element={
             <ProtectedRoutes>
               <VistaEliminarEquipo />
-              //{" "}
             </ProtectedRoutes>
           }
         />
@@ -77,7 +76,6 @@ function App() {
           element={
             <ProtectedRoutes>
               <VistaEditarEquipo />
-              //{" "}
             </ProtectedRoutes>
           }
         />

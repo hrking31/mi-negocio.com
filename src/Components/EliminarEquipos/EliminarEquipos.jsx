@@ -9,7 +9,7 @@ import { Snackbar, Alert, Box, Typography, Button, Grid } from "@mui/material";
 
 const EliminarEquipo = () => {
   const dispatch = useDispatch();
-  const equipoSeleccionado = useSelector((state) => state.selected.selected);
+  const equipoSeleccionado = useSelector((state) => state.selected);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -21,7 +21,7 @@ const EliminarEquipo = () => {
 
   const handleDelete = async () => {
     if (!equipoSeleccionado) return;
-    const { id, images } = equipoSeleccionado;
+    const { id, images, name } = equipoSeleccionado;
 
     try {
       for (const image of images) {
@@ -32,11 +32,11 @@ const EliminarEquipo = () => {
       const equipoDocRef = doc(db, "equipos", id);
       await deleteDoc(equipoDocRef);
 
-      setSnackbarMessage("Equipo eliminado con éxito");
+      setSnackbarMessage(`Equipo ${name} eliminado con éxito`);
       setSnackbarSeverity("success");
     } catch (error) {
-      console.error("Error eliminando el equipo: ", error);
-      setSnackbarMessage("Error al eliminar el equipo");
+      // console.error("Error eliminando el equipo: ", error);
+      setSnackbarMessage(`Error al eliminar el equipo ${name}.`);
       setSnackbarSeverity("error");
     } finally {
       resetForm();
@@ -177,135 +177,3 @@ const EliminarEquipo = () => {
 };
 
 export default EliminarEquipo;
-
-////////////////////////////////////////////////////////////////
-{
-  /* <Grid container spacing={2}>
-        {equipoSeleccionado.images && equipoSeleccionado.images.length > 0
-          ? equipoSeleccionado.images.map((image, index) => (
-              <Grid item xs={12} sm={4} key={index}>
-                <Box sx={{ textAlign: "center", mb: 2 }}>
-                  <img
-                    src={image.url}
-                    alt={image.name}
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <TextField
-                      type="text"
-                      readOnly
-                      value={image.name || `Nombre no disponible ${index + 1}`}
-                      fullWidth
-                      margin="normal"
-                      sx={{
-                        mt: 1,
-                        fontSize: "0.75rem",
-                        "& .MuiInputBase-input": {
-                          padding: "6px 12px",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          "& fieldset": {
-                            borderColor: "#00008B",
-                          },
-                          "&:hover fieldset": {
-                            borderColor: "#4682B4",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#1E90FF",
-                          },
-                        },
-                      }}
-                    />
-                    <TextField
-                      type="text"
-                      readOnly
-                      value={image.url}
-                      fullWidth
-                      margin="normal"
-                      sx={{
-                        mt: 1,
-                        fontSize: "0.75rem",
-                        "& .MuiInputBase-input": {
-                          padding: "6px 12px",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          "& fieldset": {
-                            borderColor: "#00008B",
-                          },
-                          "&:hover fieldset": {
-                            borderColor: "#4682B4",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#1E90FF",
-                          },
-                        },
-                      }}
-                    />
-                  </Box>
-                </Box>
-              </Grid>
-            ))
-          : null}
-        <TextField
-          type="text"
-          readOnly
-          value={name}
-          fullWidth
-          margin="normal"
-          sx={{
-            mt: 1,
-            fontSize: "0.75rem",
-            "& .MuiInputBase-input": {
-              padding: "6px 12px",
-            },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "#00008B",
-              },
-              "&:hover fieldset": {
-                borderColor: "#4682B4",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "#1E90FF",
-              },
-            },
-          }}
-        />
-
-        <TextField
-          type="text"
-          readOnly
-          value={description}
-          fullWidth
-          margin="normal"
-          sx={{
-            mt: 1,
-            fontSize: "0.75rem",
-            "& .MuiInputBase-input": {
-              padding: "6px 12px",
-            },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "#00008B",
-              },
-              "&:hover fieldset": {
-                borderColor: "#4682B4",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "#1E90FF",
-              },
-            },
-          }}
-        />
-      </Grid> */
-}

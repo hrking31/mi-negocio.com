@@ -1,36 +1,23 @@
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
-import { Box, Grid, Snackbar, Button } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { Box, Grid, Button } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { fetchEquipos } from "../../Store/Slices/searchSlice";
 import SearchComponent from "../../Components/SearchComponent/SearchComponent";
-import EliminarEquipos from "../../Components/EliminarEquipos/EliminarEquipos";
 import CardsSearchEquipos from "../../Components/CardsSearchEquipos/CardsSearchEquipos";
+import EliminarEquipos from "../../Components/EliminarEquipos/EliminarEquipos";
 
 const VistaEliminaEquipo = () => {
   const { user, logout } = useAuth();
   const dispatch = useDispatch();
-  const error = useSelector((state) => state.equipos.error);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleSearch = (searchTerm) => {
     dispatch(fetchEquipos(searchTerm));
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
   const handlerLogout = async () => {
     await logout();
   };
-
-  useEffect(() => {
-    if (error) {
-      setOpenSnackbar(true);
-    }
-  }, [error]);
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -94,13 +81,6 @@ const VistaEliminaEquipo = () => {
           </Button>
         </Grid>
       </Grid>
-
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        message={error}
-      />
     </Box>
   );
 };
