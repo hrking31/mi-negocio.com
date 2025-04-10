@@ -27,10 +27,9 @@ export default function CardsEquipos() {
               return (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <CardEquipos
+                    id={equipo.id}
                     name={equipo.name}
                     url={imageUrl}
-                    price={equipo.price}
-                    description={equipo.description}
                   />
                 </Grid>
               );

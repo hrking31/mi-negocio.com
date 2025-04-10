@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import {
@@ -18,23 +18,35 @@ import {
   Grid,
 } from "@mui/material";
 import style from "./EditarEquipos.module.css";
-import { eliminarImagenPorIndice } from "../../Store/Slices/selectedSlice";
-
 const EditarEquipo = () => {
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
-  const equipoSeleccionado = useSelector((state) => state.selected.selected);
+
+  const [editData, setEditData] = useState({
+    name: "",
+    description: "",
+    images: [],
+  });
   console.log("Estado equipoSeleccionado:", equipoSeleccionado);
-  const [editData, setEditData] = useState(
-    equipoSeleccionado || { name: "", description: "", url: [], images: [] }
-  );
   console.log("Estado editar:", editData);
+
   const [nameImage, setNameImage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageName, setImageName] = useState("");
+
+  useEffect(() => {
+    if (equipoSeleccionado) {
+      setEditData({
+        name: equipoSeleccionado.name || "",
+        description: equipoSeleccionado.description || "",
+        images: equipoSeleccionado.images || [],
+        id: equipoSeleccionado.id,
+      });
+    }
+  }, [equipoSeleccionado]);
 
   //////////////////////////////////////////////////////////////////
 

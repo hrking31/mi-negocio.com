@@ -1,20 +1,12 @@
-import { useDispatch } from "react-redux";
 import { Card, CardActionArea, CardMedia, Grid } from "@mui/material";
 import {
   StyleNameTypography,
   StyledCardContent,
 } from "./CardSearchEquiposStyles";
-import { setSelectedEquipo } from "../../Store/Slices/selectedSlice";
 
-export default function CardSearchEquipos({ equipo }) {
-  const dispatch = useDispatch();
-
+export default function CardSearchEquipos({ equipo, onSelect, isSelected }) {
   const { name, images } = equipo;
   const PrimeraUrl = images && images.length > 0 ? images[0].url : null;
-
-  const handleCardClick = () => {
-    dispatch(setSelectedEquipo(equipo));
-  };
 
   return (
     <Grid
@@ -29,10 +21,12 @@ export default function CardSearchEquipos({ equipo }) {
         },
       }}
     >
-      <Grid item xs={12} sm={12} md={12} lg={12}>
+      <Grid item xs={12}>
         <Card
+          onClick={onSelect}
           sx={{
-            backgroundColor: "#ededed",
+            backgroundColor: isSelected ? "#E3F2FD" : "#ededed",
+            border: isSelected ? "2px solid #1976d2" : "1px solid #ccc",
             maxWidth: 345,
             maxHeight: 500,
             overflow: "hidden",
@@ -42,8 +36,8 @@ export default function CardSearchEquipos({ equipo }) {
               boxShadow: 6,
             },
             margin: 1,
+            cursor: "pointer",
           }}
-          onClick={handleCardClick}
         >
           <CardActionArea>
             <CardMedia
@@ -65,6 +59,8 @@ export default function CardSearchEquipos({ equipo }) {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
+                      fontWeight: isSelected ? "bold" : "normal",
+                      color: isSelected ? "#0D47A1" : "inherit",
                     }}
                     title={name}
                   >

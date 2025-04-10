@@ -6,8 +6,10 @@ import {
   VistaCotizacion,
   VistaCuentaDeCobro,
   VistaCreaEquipo,
+  VistaSeleccionarEquipo,
   VistaEditarEquipo,
   VistaEliminarEquipo,
+  VistaCrearUsuarios,
 } from "./Views";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ProtectedRoutes } from "./Components/ProtectedRoutes/ProtectedRoutes";
@@ -55,15 +57,15 @@ function App() {
           }
         />
         <Route
-          exact
-          path="/vistaeliminarequipo/:name"
+          path="/vistaseleccionarequipo"
           element={
             <ProtectedRoutes>
-              <VistaEliminarEquipo />
+              <VistaSeleccionarEquipo />
             </ProtectedRoutes>
           }
         />
         <Route
+          exact
           path="/vistaeliminarequipo"
           element={
             <ProtectedRoutes>
@@ -79,12 +81,20 @@ function App() {
             </ProtectedRoutes>
           }
         />
+        <Route
+          path="/vistacrearusuarios"
+          element={
+            <ProtectedRoutes>
+              <VistaCrearUsuarios />
+            </ProtectedRoutes>
+          }
+        />
         {/* <Route path="/" element={<Landing />} /> */}
         <Route path="/" element={<Home />} />
         <Route path="/Home" element={<Home />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/login" element={<Login />} />
-        <Route exact path="/detail/:name" element={<Detail />} />
+        <Route exact path="/detail/:id" element={<Detail />} />
       </Routes>
     </div>
   );

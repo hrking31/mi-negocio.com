@@ -7,7 +7,10 @@ export const fetchEquiposData = () => {
   return async (dispatch) => {
     try {
       const querySnapshot = await getDocs(collection(db, "equipos"));
-      const equiposData = querySnapshot.docs.map((doc) => doc.data());
+      const equiposData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       dispatch(setEquipos(equiposData));
       dispatch(setLoading(false));
     } catch (error) {

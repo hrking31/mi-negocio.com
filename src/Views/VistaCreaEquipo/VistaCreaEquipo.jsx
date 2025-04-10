@@ -34,7 +34,6 @@ export default function VistaCreaEquipo() {
     const newImages = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
-      // name: file.name,
       name: "",
     }));
     setImages((prev) => [...prev, ...newImages]);
@@ -56,7 +55,7 @@ export default function VistaCreaEquipo() {
     const folderName = formValues.name.replace(/\s+/g, "_");
 
     const uploadPromises = images.map(async (img) => {
-      const uniqueName = `${img.name}-${Date.now()}`; // debe estar DENTRO del map
+      const uniqueName = `${img.name}-${Date.now()}`;
       const storageRef = ref(storage, `${folderName}/${uniqueName}`);
       await uploadBytes(storageRef, img.file);
       const downloadURL = await getDownloadURL(storageRef);
@@ -103,8 +102,8 @@ export default function VistaCreaEquipo() {
   };
 
   const handleCancel = () => {
-    setFormValues({ name: "", description: "" }); // Limpia los campos
-    setImages([]); // Borra las imágenes
+    setFormValues({ name: "", description: "" });
+    setImages([]);
   };
 
   const handleCloseSnackbar = () => {
@@ -180,7 +179,7 @@ export default function VistaCreaEquipo() {
 
             {images.map((img, index) => (
               <Box
-                key={img.id}
+                key={`${img.name}-${index}`}
                 sx={{ mb: 2, mt: 2, display: "flex", alignItems: "center" }}
               >
                 <img

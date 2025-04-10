@@ -35,12 +35,16 @@ const searchSlice = createSlice({
   name: "search",
   initialState: {
     results: [],
-    loading: true,
+    loading: false,
     error: null,
+    hasSearched: false,
   },
   reducers: {
     clearSearchEquipo: (state) => {
       state.results = [];
+      state.loading = false;
+      state.error = null;
+      state.hasSearched = false;
     },
   },
   extraReducers: (builder) => {
@@ -52,6 +56,7 @@ const searchSlice = createSlice({
       .addCase(fetchEquipos.fulfilled, (state, action) => {
         state.loading = false;
         state.results = action.payload;
+        state.hasSearched = true;
       })
       .addCase(fetchEquipos.rejected, (state, action) => {
         state.loading = false;

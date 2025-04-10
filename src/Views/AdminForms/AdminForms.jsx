@@ -82,7 +82,7 @@ export default function AdminForms() {
         <Grid item xs={12} sm={6} md={4}>
           <Button
             component={Link}
-            to="/vistaeditarequipo"
+            to="/vistaseleccionarequipo"
             variant="contained"
             fullWidth
             sx={{
@@ -94,13 +94,13 @@ export default function AdminForms() {
               },
             }}
           >
-            EDITAR EQUIPO
+            EDITAR o ELIMINAR EQUIPO
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Button
             component={Link}
-            to="/vistaeliminarequipo"
+            to="/VistaCrearUsuarios"
             variant="contained"
             fullWidth
             sx={{
@@ -112,7 +112,7 @@ export default function AdminForms() {
               },
             }}
           >
-            ELIMINAR EQUIPO
+            CREAR USUARIOS
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>

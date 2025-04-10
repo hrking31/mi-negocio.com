@@ -1,19 +1,10 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import { Box, Grid, Button } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { fetchEquipos } from "../../Store/Slices/searchSlice";
-import SearchComponent from "../../Components/SearchComponent/SearchComponent";
-import CardsSearchEquipos from "../../Components/CardsSearchEquipos/CardsSearchEquipos";
 import EliminarEquipos from "../../Components/EliminarEquipos/EliminarEquipos";
 
 const VistaEliminaEquipo = () => {
   const { user, logout } = useAuth();
-  const dispatch = useDispatch();
-
-  const handleSearch = (searchTerm) => {
-    dispatch(fetchEquipos(searchTerm));
-  };
 
   const handlerLogout = async () => {
     await logout();
@@ -22,17 +13,6 @@ const VistaEliminaEquipo = () => {
   return (
     <Box sx={{ padding: 2 }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Box sx={{ padding: 2 }}>
-            <Box sx={{ marginBottom: 4 }}>
-              <SearchComponent onSearch={handleSearch} />
-            </Box>
-            <Box sx={{ marginBottom: 4 }}>
-              <CardsSearchEquipos />
-            </Box>
-          </Box>
-        </Grid>
-
         <Grid item xs={12} md={6}>
           <Box sx={{ padding: 2 }}>
             <Box sx={{ marginBottom: 4 }}>
@@ -46,7 +26,7 @@ const VistaEliminaEquipo = () => {
         <Grid item xs={12} sm={6} md={4}>
           <Button
             component={Link}
-            to="/admin"
+            to="/vistaseleccionarequipo"
             variant="contained"
             fullWidth
             sx={{
@@ -59,7 +39,7 @@ const VistaEliminaEquipo = () => {
               },
             }}
           >
-            MENU
+            SELECCIONA OTRO EQUIPO
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>

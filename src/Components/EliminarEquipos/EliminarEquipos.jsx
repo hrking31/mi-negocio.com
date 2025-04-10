@@ -1,23 +1,16 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { deleteDoc, doc } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import { db, storage } from "../../Components/Firebase/Firebase";
-import { clearSelectedEquipo } from "../../Store/Slices/selectedSlice";
-import { clearSearchEquipo } from "../../Store/Slices/searchSlice";
 import { Snackbar, Alert, Box, Typography, Button, Grid } from "@mui/material";
 
 const EliminarEquipo = () => {
-  const dispatch = useDispatch();
-  const equipoSeleccionado = useSelector((state) => state.selected);
+  const location = useLocation();
+  const equipoSeleccionado = location.state?.equipo;
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-
-  const resetForm = () => {
-    dispatch(clearSelectedEquipo());
-    dispatch(clearSearchEquipo());
-  };
 
   const handleDelete = async () => {
     if (!equipoSeleccionado) return;
@@ -39,7 +32,6 @@ const EliminarEquipo = () => {
       setSnackbarMessage(`Error al eliminar el equipo ${name}.`);
       setSnackbarSeverity("error");
     } finally {
-      resetForm();
       setOpenSnackbar(true);
     }
   };
@@ -144,23 +136,6 @@ const EliminarEquipo = () => {
         }}
       >
         Eliminar Equipo
-      </Button>
-
-      <Button
-        variant="contained"
-        onClick={resetForm}
-        sx={{
-          marginLeft: 2,
-          width: "200px",
-          height: "45px",
-          color: "#ffffff",
-          backgroundColor: "#1E90FF",
-          "&:hover": {
-            backgroundColor: "#4682B4",
-          },
-        }}
-      >
-        Cancelar
       </Button>
 
       <Snackbar

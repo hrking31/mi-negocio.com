@@ -2,9 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardActionArea, CardMedia, Grid } from "@mui/material";
 import { StyleNameTypography, StyledCardContent } from "./CardEquiposStyled";
-// import { Textfit } from "react-textfit";
 
-export default function CardEquipos({ name, url }) {
+export default function CardEquipos({ name, url, id }) {
   return (
     <Grid
       container
@@ -19,7 +18,7 @@ export default function CardEquipos({ name, url }) {
       }}
     >
       <Grid item xs={12}>
-        <Link to={`/detail/${name}`} style={{ textDecoration: "none" }}>
+        <Link to={`/detail/${id}`} style={{ textDecoration: "none" }}>
           <Card
             sx={{
               maxWidth: 345,
@@ -39,15 +38,6 @@ export default function CardEquipos({ name, url }) {
                 src={url}
                 alt="img not found"
               />
-              {/* <StyledCardContent>
-                <Grid container direction="column" spacing={2}>
-                  <Grid item xs={12} sx={{ marginBottom: "-15px" }}>
-                    <Textfit mode="multi" max={30}>
-                      <StyleNameTypography>{name}</StyleNameTypography>
-                    </Textfit>
-                  </Grid>
-                </Grid>
-              </StyledCardContent> */}
               <StyledCardContent>
                 <Grid container direction="column" spacing={2}>
                   <Grid item xs={12} sx={{ marginBottom: "-15px" }}>
