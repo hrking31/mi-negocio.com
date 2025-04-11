@@ -17,7 +17,6 @@ import style from "./VistaCreaEquipo.module.css";
 
 export default function VistaCreaEquipo() {
   const { user, logout } = useAuth();
-
   const [formValues, setFormValues] = useState({ name: "", description: "" });
   const [images, setImages] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
