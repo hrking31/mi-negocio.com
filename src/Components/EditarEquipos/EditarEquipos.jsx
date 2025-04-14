@@ -50,12 +50,25 @@ const EditarEquipo = () => {
     }));
   };
 
-  const handleReplaceImage = (index, newFile, newName) => {
+  const handleImputRestName = () => {
+    setFormData((prev) => ({
+      ...prev,
+      name: "",
+    }));
+  };
+  const handleImputRestDescription = () => {
+    setFormData((prev) => ({
+      ...prev,
+      description: "",
+    }));
+  };
+
+  const handleReplaceImage = (index, newFile) => {
     const newPreviewUrl = URL.createObjectURL(newFile);
 
     const updatedImages = [...formData.images];
     updatedImages[index] = {
-      name: newName,
+      name: "",
       url: newPreviewUrl,
       file: newFile,
       isNew: true,
@@ -65,6 +78,43 @@ const EditarEquipo = () => {
       ...prev,
       images: updatedImages,
     }));
+  };
+
+  const handleChangeImageName = (index, newName) => {
+    const updatedImages = [...formData.images];
+    updatedImages[index] = {
+      ...updatedImages[index],
+      name: newName,
+    };
+
+    setFormData((prev) => ({
+      ...prev,
+      images: updatedImages,
+    }));
+  };
+
+  const handleDeleteImageByIndex = (indexToDelete) => {
+    const updatedImages = formData.images.filter((_, i) => i !== indexToDelete);
+    setFormData((prev) => ({
+      ...prev,
+      images: updatedImages,
+    }));
+
+    if (editingImageIndex === indexToDelete) {
+      setEditingImageIndex(null);
+    }
+  };
+
+  const handleConfirmImageName = () => {
+    if (editingImageIndex !== null) {
+      const updatedImages = [...formData.images];
+      updatedImages[editingImageIndex].name = tempImageName;
+      setFormData((prev) => ({
+        ...prev,
+        images: updatedImages,
+      }));
+      setEditingImageIndex(null);
+    }
   };
 
   const [editingImageIndex, setEditingImageIndex] = useState(null);
@@ -100,6 +150,20 @@ const EditarEquipo = () => {
             margin="normal"
           />
         </Grid>
+        <Button
+          variant="contained"
+          onClick={handleImputRestName}
+          sx={{
+            fontSize: "12px",
+            backgroundColor: "#1E90FF",
+            "&:hover": {
+              backgroundColor: "#d32f2f",
+            },
+            mt: 2,
+          }}
+        >
+          Cancelar
+        </Button>
         <Grid item xs={12} sm={12} md={12}>
           <TextField
             name="description"
@@ -110,6 +174,21 @@ const EditarEquipo = () => {
             margin="normal"
           />
         </Grid>
+        <Button
+          variant="contained"
+          onClick={handleImputRestDescription}
+          sx={{
+            fontSize: "12px",
+            backgroundColor: "#1E90FF",
+            "&:hover": {
+              backgroundColor: "#d32f2f",
+            },
+            mt: 2,
+            mb: 2,
+          }}
+        >
+          Cancelar
+        </Button>
         <Grid container spacing={2}>
           {formData.images && formData.images.length > 0
             ? formData.images.map((image, index) => (
@@ -138,7 +217,10 @@ const EditarEquipo = () => {
                       {editingImageIndex !== index ? (
                         <Button
                           variant="contained"
-                          onClick={() => setEditingImageIndex(index)}
+                          onClick={() => {
+                            setEditingImageIndex(index);
+                            setTempImageName("");
+                          }}
                           sx={{
                             fontSize: "12px",
                             backgroundColor: "#FFA500",
@@ -153,34 +235,62 @@ const EditarEquipo = () => {
                         </Button>
                       ) : (
                         <>
+                          <label
+                            htmlFor="file-upload"
+                            style={{ cursor: "pointer" }}
+                          >
+                            <Button
+                              variant="contained"
+                              component="span"
+                              sx={{
+                                height: "45px",
+                                color: "#ffffff",
+                                backgroundColor: "#1E90FF",
+                                "&:hover": {
+                                  backgroundColor: "#4682B4",
+                                },
+                                mt: 2,
+                                mb: 2,
+                              }}
+                            >
+                              Selecciona Imagen
+                            </Button>
+                          </label>
+                          <input
+                            id="file-upload"
+                            type="file"
+                            name="fotos"
+                            accept="image/*"
+                            onChange={(e) =>
+                              handleReplaceImage(index, e.target.files[0])
+                            }
+                            style={{ display: "none" }}
+                          />
                           <TextField
                             label="Nombre de la imagen"
-                            value={formData.images[index]?.newName || ""}
-                            onChange={(e) =>
-                              handleReplaceImage(
-                                index,
-                                formData.images[index]?.file || null,
-                                e.target.value
-                              )
-                            }
+                            value={formData.images[index]?.name || ""}
+                            onChange={(e) => {
+                              handleChangeImageName(index, e.target.value);
+                            }}
                             size="small"
                             sx={{ flexGrow: 1, mr: 2 }}
                           />
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                              handleReplaceImage(
-                                index,
-                                e.target.files[0],
-                                formData.images[index]?.name || ""
-                              )
-                            }
-                            style={{ marginBottom: "10px" }}
-                          />
                           <Button
                             variant="contained"
-                            onClick={() => setEditingImageIndex(null)}
+                            onClick={() => {
+                              const updatedImages = [...formData.images];
+                              updatedImages[index] = {
+                                name: equipoSeleccionado.images[index].name,
+                                url: equipoSeleccionado.images[index].url,
+                                file: null,
+                                isNew: false,
+                              };
+                              setFormData((prev) => ({
+                                ...prev,
+                                images: updatedImages,
+                              }));
+                              setEditingImageIndex(null);
+                            }}
                             sx={{
                               fontSize: "12px",
                               backgroundColor: "#1E90FF",
@@ -192,6 +302,7 @@ const EditarEquipo = () => {
                           >
                             Cancelar
                           </Button>
+
                           <Button
                             variant="contained"
                             onClick={() => handleDeleteImageByIndex(index)}
@@ -206,6 +317,19 @@ const EditarEquipo = () => {
                           >
                             Eliminar Imagen
                           </Button>
+                          <Box sx={{ textAlign: "center", mt: 4 }}>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleConfirmImageName;
+                                setEditingImageIndex(null);
+                                console.log("Datos guardados:", formData);
+                              }}
+                            >
+                              Guardar Cambios
+                            </Button>
+                          </Box>
                         </>
                       )}
                     </Box>

@@ -8,6 +8,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import LoadingLogo from "../../Components/LoadingLogo/LoadingLogo";
 import { useAuth } from "../../Context/AuthContext";
 import { Link } from "react-router-dom";
 import { storage, db } from "../../Components/Firebase/Firebase";
@@ -17,6 +18,7 @@ import style from "./VistaCreaEquipo.module.css";
 
 export default function VistaCreaEquipo() {
   const { user, logout } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({ name: "", description: "" });
   const [images, setImages] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -31,6 +33,7 @@ export default function VistaCreaEquipo() {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     const newImages = files.map((file) => ({
+      id: crypto.randomUUID(),
       file,
       preview: URL.createObjectURL(file),
       name: "",
@@ -74,6 +77,7 @@ export default function VistaCreaEquipo() {
       setOpenSnackbar(true);
       return;
     }
+    setLoading(true);
 
     try {
       const uploadedImages = await handleUploadImages();
@@ -96,7 +100,9 @@ export default function VistaCreaEquipo() {
     } catch (error) {
       setSnackbarMessage(`Error: ${error.message}`);
       setSnackbarSeverity("error");
+    } finally {
       setOpenSnackbar(true);
+      setLoading(false);
     }
   };
 
@@ -112,6 +118,8 @@ export default function VistaCreaEquipo() {
   const handlerLogout = async () => {
     await logout();
   };
+
+  if (loading) return <LoadingLogo />;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -176,38 +184,39 @@ export default function VistaCreaEquipo() {
               />
             </Box>
 
-            {images.map((img, index) => (
-              <Box
-                key={`${img.name}-${index}`}
-                sx={{ mb: 2, mt: 2, display: "flex", alignItems: "center" }}
-              >
-                <img
-                  src={img.preview}
-                  alt={`preview-${index}`}
-                  className={style.previewImage}
-                  style={{ width: 80, height: 80, marginRight: 10 }}
-                />
-                <TextField
-                  label="Nombre de la imagen"
-                  value={img.name}
-                  onChange={(e) => handleNameChange(index, e.target.value)}
-                  size="small"
-                  sx={{ flexGrow: 1, mr: 2 }}
-                />
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => handleRemoveImage(index)}
-                  sx={{
-                    marginLeft: 2,
-                    width: "200px",
-                    height: "45px",
-                  }}
+            {images &&
+              images.map((img, index) => (
+                <Box
+                  key={img.id}
+                  sx={{ mb: 2, mt: 2, display: "flex", alignItems: "center" }}
                 >
-                  Eliminar
-                </Button>
-              </Box>
-            ))}
+                  <img
+                    src={img.preview}
+                    alt={`preview-${index}`}
+                    className={style.previewImage}
+                    style={{ width: 80, height: 80, marginRight: 10 }}
+                  />
+                  <TextField
+                    label="Nombre de la imagen"
+                    value={img.name}
+                    onChange={(e) => handleNameChange(index, e.target.value)}
+                    size="small"
+                    sx={{ flexGrow: 1, mr: 2 }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleRemoveImage(index)}
+                    sx={{
+                      marginLeft: 2,
+                      width: "200px",
+                      height: "45px",
+                    }}
+                  >
+                    Eliminar
+                  </Button>
+                </Box>
+              ))}
           </Grid>
         </Grid>
 
@@ -216,6 +225,7 @@ export default function VistaCreaEquipo() {
             <Button
               type="submit"
               variant="contained"
+              disabled={loading}
               fullWidth
               sx={{
                 height: "45px",
@@ -226,7 +236,7 @@ export default function VistaCreaEquipo() {
                 },
               }}
             >
-              CREAR EQUIPO
+              Crear Equipo
             </Button>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
