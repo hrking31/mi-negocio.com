@@ -1,44 +1,70 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { deleteDoc, doc } from "firebase/firestore";
-import { ref, deleteObject } from "firebase/storage";
+import LoadingLogo from "../../Components/LoadingLogo/LoadingLogo";
+import { getStorage, ref, listAll, deleteObject } from "firebase/storage";
 import { db, storage } from "../../Components/Firebase/Firebase";
-import { Snackbar, Alert, Box, Typography, Button, Grid } from "@mui/material";
+import {
+  Snackbar,
+  Alert,
+  Box,
+  Typography,
+  Button,
+  Grid,
+  TextField,
+} from "@mui/material";
 
 const EliminarEquipo = () => {
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const equipoSeleccionado = location.state?.equipo;
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  const handleDelete = async () => {
-    if (!equipoSeleccionado) return;
-    const { id, images, name } = equipoSeleccionado;
+  const eliminarCarpetaCompleta = async (equipoId) => {
+    const storage = getStorage();
+    const carpetaRef = ref(storage, `${equipoId}/`);
+    const resultado = await listAll(carpetaRef);
+    const promesasDeBorrado = resultado.items.map((item) => deleteObject(item));
 
     try {
-      for (const image of images) {
-        const imageRef = ref(storage, image.url);
-        await deleteObject(imageRef);
-      }
+      await Promise.all(promesasDeBorrado);
+      return `Carpeta de Imágenes`;
+    } catch (error) {
+      throw new Error("Error al eliminar la Carpeta de Imágenes");
+    }
+  };
 
+  const handleDelete = async () => {
+    if (!equipoSeleccionado) return;
+    const { id, name } = equipoSeleccionado;
+    setLoading(true);
+
+    try {
+      const mensajeCarpeta = await eliminarCarpetaCompleta(id);
       const equipoDocRef = doc(db, "equipos", id);
       await deleteDoc(equipoDocRef);
 
-      setSnackbarMessage(`Equipo ${name} eliminado con éxito`);
+      setSnackbarMessage(`${mensajeCarpeta} y Equipo ${name} Eliminado.`);
       setSnackbarSeverity("success");
     } catch (error) {
       // console.error("Error eliminando el equipo: ", error);
-      setSnackbarMessage(`Error al eliminar el equipo ${name}.`);
+      setSnackbarMessage(
+        error.message || `Error al Eliminar el Equipo ${name}.`
+      );
       setSnackbarSeverity("error");
     } finally {
       setOpenSnackbar(true);
+      setLoading(false);
     }
   };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+
+  if (loading) return <LoadingLogo />;
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -52,7 +78,13 @@ const EliminarEquipo = () => {
             fontSize: { xs: "h5.fontSize", sm: "h4.fontSize" },
           }}
         >
-          Elimina equipo seleccionado.
+          Elimina Equipo {""}
+          <Box component="span" sx={{ color: "#1976d2" }}>
+            {equipoSeleccionado.name}.
+          </Box>
+        </Typography>
+        <Typography sx={{ color: "#1976d2", mb: 4 }}>
+          {equipoSeleccionado.description}
         </Typography>
       </Box>
 
@@ -82,40 +114,11 @@ const EliminarEquipo = () => {
                       <Typography
                         variant="body2"
                         sx={{
-                          fontSize: "1rem",
-                          color: "#8B3A3A",
-                        }}
-                      >
-                        Nombre Imagen:
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
                           fontSize: "0.85rem",
                           color: "#00008B",
                         }}
                       >
                         {image.name || `Nombre no disponible ${index + 1}`}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontSize: "1rem",
-                          color: "#8B3A3A",
-                        }}
-                      >
-                        Url:
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontSize: "0.85rem",
-                          color: "#00008B",
-                          wordBreak: "break-word",
-                          maxWidth: "100%",
-                        }}
-                      >
-                        {image.url}
                       </Typography>
                     </Box>
                   </Box>

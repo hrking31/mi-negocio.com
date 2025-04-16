@@ -9,19 +9,26 @@ import {
   TextField,
   Grid,
 } from "@mui/material";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 // import style from "./EditarEquipos.module.css";
 
 const EditarEquipo = () => {
   const location = useLocation();
   const nameInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
   const [equipoSeleccionado, setEquipoSeleccionado] = useState(
     () => location.state?.equipo || null
   );
-  // const [openSnackbar, setOpenSnackbar] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage] = useState("");
-  // const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   console.log("Estado equipo Seleccionado:", equipoSeleccionado);
   const [formData, setFormData] = useState({
     id: "",
@@ -40,6 +47,7 @@ const EditarEquipo = () => {
         images: equipoSeleccionado.images.map((img) => ({
           name: img.name,
           url: img.url,
+          path: img.path,
           file: null,
           isNew: false,
         })),
@@ -72,11 +80,15 @@ const EditarEquipo = () => {
     const newPreviewUrl = URL.createObjectURL(newFile);
 
     const updatedImages = [...formData.images];
+
+    const previousImage = updatedImages[index];
+
     updatedImages[index] = {
       name: "",
       url: newPreviewUrl,
       file: newFile,
       isNew: true,
+      path: previousImage.path || null,
     };
 
     setFormData((prev) => ({
@@ -122,55 +134,98 @@ const EditarEquipo = () => {
     }
   };
 
-  // Esta función sube solo las imágenes nuevas (isNew: true)
-  const subirImagenesNuevas = async (imagenesNuevas) => {
-    const storage = getStorage();
-    const subidas = [];
-
-    for (const img of imagenesNuevas) {
-      const storageRef = ref(storage, `imagenes/${img.file.name}`);
-      await uploadBytes(storageRef, img.file);
-      const url = await getDownloadURL(storageRef);
-
-      subidas.push({
-        name: img.name,
-        url,
-        file: null,
-        isNew: false,
-      });
+  // Elimina una imagen del storage
+  const eliminarImagenStorage = async (path) => {
+    try {
+      const storage = getStorage();
+      const imageRef = ref(storage, path);
+      await deleteObject(imageRef);
+    } catch (error) {
+      console.warn("⚠️ No se pudo eliminar imagen del storage:", error);
     }
+  };
+
+  // Subir imágenes nuevas y reemplazar en sus posiciones originales
+  const subirImagenesNuevas = async (imagenes, equipoId) => {
+    const storage = getStorage();
+    const subidas = await Promise.all(
+      imagenes.map(async (img) => {
+        if (!img.isNew) return img; // Conservar imagen antigua si no es nueva
+        console.log("🟢 Imagen no modificada:", img);
+        // Si hay una url existente, eliminar la imagen anterior
+        if (img.path) {
+          console.log("🟢 Imagen path:", img.path);
+          await eliminarImagenStorage(img.path);
+        }
+
+        // Subir nueva imagen
+        const uniqueName = `${img.name}-${Date.now()}`;
+        const storageRef = ref(storage, `${equipoId}/${uniqueName}`);
+        await uploadBytes(storageRef, img.file);
+        const url = await getDownloadURL(storageRef);
+
+        return {
+          name: img.name,
+          url,
+          path: storageRef.fullPath,
+        };
+      })
+    );
 
     return subidas;
   };
 
-  // Esta función principal actualiza Firestore con los cambios
+  // Actualiza los datos en Firestore y reemplaza imágenes
   const actualizarEquipoConCambios = async (formData, equipoId) => {
     try {
       const db = getFirestore();
 
-      // Filtrar imágenes
-      const imagenesNuevas = formData.images.filter((img) => img.isNew);
-      const imagenesAntiguas = formData.images.filter((img) => !img.isNew);
+      // Subir imágenes nuevas (manteniendo orden y eliminando anteriores)
+      const imagenesFinales = await subirImagenesNuevas(
+        formData.images,
+        equipoId
+      );
 
-      // Subir nuevas y combinar con las antiguas
-      const nuevasSubidas = await subirImagenesNuevas(imagenesNuevas);
-      const imagenesFinales = [...imagenesAntiguas, ...nuevasSubidas];
+      // 🔥 LIMPIAMOS las imágenes para guardar solo lo necesario en Firestore
+      const imagenesFinalesFiltradas = imagenesFinales.map((img) => ({
+        name: img.name,
+        url: img.url,
+        path: img.path,
+      }));
 
-      // Armar los datos a guardar
+      // Datos actualizados
       const datosActualizados = {
         name: formData.name,
         description: formData.description,
-        images: imagenesFinales,
+        images: imagenesFinalesFiltradas,
+        nameLowerCase: formData.name.toLowerCase(),
       };
 
-      // Actualizar Firestore
+      // Actualizar documento
       const equipoRef = doc(db, "equipos", equipoId);
       await updateDoc(equipoRef, datosActualizados);
+
+      setSnackbarMessage("Equipo actualizado con éxito");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
 
       console.log("✅ Equipo actualizado con éxito.");
     } catch (error) {
       console.error("❌ Error al actualizar el equipo:", error);
     }
+    setFormData({
+      id: "",
+      name: "",
+      description: "",
+      images: [],
+    });
+    setEquipoSeleccionado(null);
+    setEditingImageIndex(null);
+    setEditingNameIndex(null);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   const [editingImageIndex, setEditingImageIndex] = useState(null);
@@ -189,19 +244,11 @@ const EditarEquipo = () => {
       >
         Editar el equipo
       </Typography>
-      {/* <Typography sx={{ color: "#00008B", marginBottom: 2 }}>
-        {equipoSeleccionado.name}
-      </Typography>
-      <Typography sx={{ color: "#00008B", marginBottom: 2 }}>
-        {equipoSeleccionado.description}
-      </Typography> */}
-
       <Grid container spacing={0.5} justifyContent="center">
         <Grid item xs={12} sm={12} md={12}>
           <TextField
             inputRef={nameInputRef}
             name="name"
-            // label="Editar Nombre"
             value={formData.name}
             onChange={handleInputChange}
             fullWidth
@@ -213,8 +260,8 @@ const EditarEquipo = () => {
           onClick={() => {
             setFormData({ ...formData, name: "" });
             setTimeout(() => {
-              nameInputRef.current?.focus(); // Coloca el cursor en el input
-            }, 0); // Esperamos que el estado se actualice antes de enfocar
+              nameInputRef.current?.focus();
+            }, 0);
           }}
           sx={{
             fontSize: "12px",
@@ -223,25 +270,11 @@ const EditarEquipo = () => {
               backgroundColor: "#d32f2f",
             },
             mt: 2,
+            mr: 2,
           }}
         >
           Editar Nombre
         </Button>
-
-        {/* <Button
-          variant="contained"
-          onClick={() => setFormData({ ...formData, name: "" })}
-          sx={{
-            fontSize: "12px",
-            backgroundColor: "#1E90FF",
-            "&:hover": {
-              backgroundColor: "#d32f2f",
-            },
-            mt: 2,
-          }}
-        >
-          Editar Nombre
-        </Button> */}
         <Button
           variant="contained"
           onClick={handleImputRestName}
@@ -258,8 +291,8 @@ const EditarEquipo = () => {
         </Button>
         <Grid item xs={12} sm={12} md={12}>
           <TextField
+            inputRef={descriptionInputRef}
             name="description"
-            // label="Editar Descripción"
             value={formData.description}
             onChange={handleInputChange}
             fullWidth
@@ -268,7 +301,12 @@ const EditarEquipo = () => {
         </Grid>
         <Button
           variant="contained"
-          onClick={() => setFormData({ ...formData, description: "" })}
+          onClick={() => {
+            setFormData({ ...formData, description: "" });
+            setTimeout(() => {
+              descriptionInputRef.current?.focus();
+            }, 0);
+          }}
           sx={{
             fontSize: "12px",
             backgroundColor: "#1E90FF",
@@ -276,9 +314,10 @@ const EditarEquipo = () => {
               backgroundColor: "#d32f2f",
             },
             mt: 2,
+            mr: 2,
           }}
         >
-          Editar descripcion
+          Editar descripción
         </Button>
         <Button
           variant="contained"
@@ -325,7 +364,6 @@ const EditarEquipo = () => {
                           variant="contained"
                           onClick={() => {
                             setEditingImageIndex(index);
-                            setTempImageName("");
                           }}
                           sx={{
                             fontSize: "12px",
@@ -467,6 +505,20 @@ const EditarEquipo = () => {
           </Button>
         </Box>
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

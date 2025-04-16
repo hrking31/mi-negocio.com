@@ -13,7 +13,7 @@ import { useAuth } from "../../Context/AuthContext";
 import { Link } from "react-router-dom";
 import { storage, db } from "../../Components/Firebase/Firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, setDoc, doc } from "firebase/firestore";
 import style from "./VistaCreaEquipo.module.css";
 
 export default function VistaCreaEquipo() {
@@ -53,15 +53,13 @@ export default function VistaCreaEquipo() {
     setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
-  const handleUploadImages = async () => {
-    const folderName = formValues.name.replace(/\s+/g, "_");
-
+  const handleUploadImages = async (equipoId) => {
     const uploadPromises = images.map(async (img) => {
       const uniqueName = `${img.name}-${Date.now()}`;
-      const storageRef = ref(storage, `${folderName}/${uniqueName}`);
+      const storageRef = ref(storage, `${equipoId}/${uniqueName}`);
       await uploadBytes(storageRef, img.file);
       const downloadURL = await getDownloadURL(storageRef);
-      return { name: img.name, url: downloadURL };
+      return { name: img.name, url: downloadURL, path: storageRef.fullPath };
     });
 
     return await Promise.all(uploadPromises);
@@ -80,16 +78,20 @@ export default function VistaCreaEquipo() {
     setLoading(true);
 
     try {
-      const uploadedImages = await handleUploadImages();
+      const equipoRef = doc(collection(db, "equipos"));
+      const equipoId = equipoRef.id;
+
+      const uploadedImages = await handleUploadImages(equipoId);
 
       const data = {
+        id: equipoId,
         name,
         description,
         images: uploadedImages,
         nameLowerCase: name.toLowerCase(),
       };
 
-      await addDoc(collection(db, "equipos"), data);
+      await setDoc(equipoRef, data);
 
       setSnackbarMessage("Equipo creado exitosamente.");
       setSnackbarSeverity("success");
@@ -150,40 +152,6 @@ export default function VistaCreaEquipo() {
               rows={4}
               margin="normal"
             />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-                <Button
-                  variant="contained"
-                  component="span"
-                  sx={{
-                    height: "45px",
-                    color: "#ffffff",
-                    backgroundColor: "#1E90FF",
-                    "&:hover": {
-                      backgroundColor: "#4682B4",
-                    },
-                    mt: 2,
-                    mb: 2,
-                  }}
-                >
-                  Selecciona Imagen
-                </Button>
-              </label>
-              <input
-                id="file-upload"
-                type="file"
-                name="fotos"
-                onChange={handleImageChange}
-                style={{ display: "none" }}
-              />
-            </Box>
-
             {images &&
               images.map((img, index) => (
                 <Box
@@ -217,6 +185,39 @@ export default function VistaCreaEquipo() {
                   </Button>
                 </Box>
               ))}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+                <Button
+                  variant="contained"
+                  component="span"
+                  sx={{
+                    height: "45px",
+                    color: "#ffffff",
+                    backgroundColor: "#1E90FF",
+                    "&:hover": {
+                      backgroundColor: "#4682B4",
+                    },
+                    mt: 2,
+                    mb: 2,
+                  }}
+                >
+                  Selecciona Imagen
+                </Button>
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                name="fotos"
+                onChange={handleImageChange}
+                style={{ display: "none" }}
+              />
+            </Box>
           </Grid>
         </Grid>
 
