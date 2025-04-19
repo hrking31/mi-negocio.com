@@ -76,6 +76,39 @@ const EditarEquipo = () => {
     }));
   };
 
+  const handleInputNewImg = (files) => {
+    const file = files[0];
+    if (!file) return;
+
+    const nuevaImagen = {
+      file,
+      url: URL.createObjectURL(file),
+      name: file.name,
+    };
+
+    setNuevaImagenTemporal(nuevaImagen);
+  };
+
+  const guardarImagenConNombre = () => {
+    if (!nuevaImagenTemporal || !nombreTemporal) return;
+
+    const nuevaImagen = {
+      file: nuevaImagenTemporal.file,
+      url: nuevaImagenTemporal.url,
+      name: nombreTemporal,
+      isNew: true,
+      path: null,
+    };
+
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, nuevaImagen],
+    }));
+
+    setNuevaImagenTemporal(null);
+    setNombreTemporal("");
+  };
+
   const handleReplaceImage = (index, newFile) => {
     const newPreviewUrl = URL.createObjectURL(newFile);
 
@@ -111,6 +144,12 @@ const EditarEquipo = () => {
   };
 
   const handleDeleteImageByIndex = (indexToDelete) => {
+    const imagenAEliminar = formData.images[indexToDelete];
+
+    if (imagenAEliminar?.path) {
+      setImagenesEliminadas((prev) => [...prev, imagenAEliminar.path]);
+    }
+
     const updatedImages = formData.images.filter((_, i) => i !== indexToDelete);
     setFormData((prev) => ({
       ...prev,
@@ -175,18 +214,21 @@ const EditarEquipo = () => {
     return subidas;
   };
 
-  // Actualiza los datos en Firestore y reemplaza imágenes
   const actualizarEquipoConCambios = async (formData, equipoId) => {
     try {
       const db = getFirestore();
 
-      // Subir imágenes nuevas (manteniendo orden y eliminando anteriores)
+      await Promise.all(
+        imagenesEliminadas.map(async (path) => {
+          await eliminarImagenStorage(path);
+        })
+      );
+
       const imagenesFinales = await subirImagenesNuevas(
         formData.images,
         equipoId
       );
 
-      // 🔥 LIMPIAMOS las imágenes para guardar solo lo necesario en Firestore
       const imagenesFinalesFiltradas = imagenesFinales.map((img) => ({
         name: img.name,
         url: img.url,
@@ -224,12 +266,43 @@ const EditarEquipo = () => {
     setEditingNameIndex(null);
   };
 
+  const handleNewIndexChange = (index, newIndex) => {
+    setNewIndices((prev) => ({
+      ...prev,
+      [index]: newIndex,
+    }));
+  };
+
+  // Maneja el guardado de los nuevos índices
+  const handleSave = () => {
+    const updatedImages = [...formData.images];
+    const newOrder = { ...newIndices };
+
+    // Aseguramos que los índices sean válidos y estén dentro de los límites
+    Object.entries(newOrder).forEach(([index, newIndex]) => {
+      const imageIndex = parseInt(index, 10);
+      if (newIndex >= 0 && newIndex < updatedImages.length) {
+        updatedImages[newIndex] = formData.images[imageIndex];
+      }
+    });
+
+    setFormData((prev) => ({
+      ...prev,
+      images: updatedImages,
+    }));
+  };
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
+  const [originalImageBeforeEdit, setOriginalImageBeforeEdit] = useState(null);
   const [editingImageIndex, setEditingImageIndex] = useState(null);
+  const [imagenesEliminadas, setImagenesEliminadas] = useState([]);
   const [editingNameIndex, setEditingNameIndex] = useState(null);
+  const [nuevaImagenTemporal, setNuevaImagenTemporal] = useState(null);
+  const [nombreTemporal, setNombreTemporal] = useState("");
+  const [newIndices, setNewIndices] = useState({});
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -358,12 +431,15 @@ const EditarEquipo = () => {
                       <Typography sx={{ color: "#00008B", marginBottom: 2 }}>
                         {image.name}
                       </Typography>
-
+                      <Typography sx={{ color: "#00008B", marginBottom: 2 }}>
+                        Posición actual: {index}
+                      </Typography>
                       {editingImageIndex !== index ? (
                         <Button
                           variant="contained"
                           onClick={() => {
                             setEditingImageIndex(index);
+                            setOriginalImageBeforeEdit(formData.images[index]);
                           }}
                           sx={{
                             fontSize: "12px",
@@ -428,6 +504,19 @@ const EditarEquipo = () => {
                               />
                             </>
                           )}
+                          <TextField
+                            type="number"
+                            label="Nuevo índice"
+                            onChange={(e) =>
+                              handleNewIndexChange(
+                                index,
+                                parseInt(e.target.value)
+                              )
+                            }
+                            size="small"
+                            sx={{ flexGrow: 1, mr: 2 }}
+                          />
+                          <button onClick={handleSave}>Guardar</button>
                           <Button
                             variant="contained"
                             onClick={() => handleDeleteImageByIndex(index)}
@@ -446,18 +535,18 @@ const EditarEquipo = () => {
                             variant="contained"
                             onClick={() => {
                               const updatedImages = [...formData.images];
-                              updatedImages[index] = {
-                                name: equipoSeleccionado.images[index].name,
-                                url: equipoSeleccionado.images[index].url,
-                                file: null,
-                                isNew: false,
-                              };
+                              if (originalImageBeforeEdit) {
+                                updatedImages[index] = originalImageBeforeEdit;
+                              }
+
                               setFormData((prev) => ({
                                 ...prev,
                                 images: updatedImages,
                               }));
+
                               setEditingImageIndex(null);
                               setEditingNameIndex(null);
+                              setOriginalImageBeforeEdit(null);
                             }}
                             sx={{
                               fontSize: "12px",
@@ -480,6 +569,11 @@ const EditarEquipo = () => {
                                 setEditingImageIndex(null);
                                 console.log("imagenes guardadas:", formData);
                               }}
+                              sx={{
+                                height: "40px",
+                                backgroundColor: "#1E90FF",
+                                "&:hover": { backgroundColor: "#28a745" },
+                              }}
                             >
                               Guardar Cambios
                             </Button>
@@ -491,8 +585,111 @@ const EditarEquipo = () => {
                 </Grid>
               ))
             : null}
+          <Box sx={{ textAlign: "center", mt: 4 }}>
+            {!nuevaImagenTemporal ? (
+              <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleInputNewImg(e.target.files)}
+                  style={{ display: "none" }}
+                />
+                <Button
+                  variant="contained"
+                  component="span"
+                  sx={{
+                    height: "45px",
+                    color: "#ffffff",
+                    backgroundColor: "#1E90FF",
+                    "&:hover": {
+                      backgroundColor: "#4682B4",
+                    },
+                    mt: 2,
+                    mb: 2,
+                    mr: 2,
+                  }}
+                >
+                  Selecciona Nueva Imagen
+                </Button>
+              </label>
+            ) : (
+              <Grid item xs={12} sm={4}>
+                <img
+                  src={nuevaImagenTemporal.url}
+                  alt="preview"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                  }}
+                />
+                <TextField
+                  label="Nombre de la imagen"
+                  value={nombreTemporal}
+                  onChange={(e) => setNombreTemporal(e.target.value)}
+                  size="small"
+                  sx={{ flexGrow: 1, mr: 2 }}
+                />
+                <Button
+                  variant="contained"
+                  onClick={guardarImagenConNombre}
+                  sx={{
+                    height: "40px",
+                    backgroundColor: "#1E90FF",
+                    "&:hover": { backgroundColor: "#28a745" },
+                    mt: 2,
+                  }}
+                >
+                  Guardar Nueva Imagen
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setNuevaImagenTemporal(null);
+                    setNombreTemporal("");
+                  }}
+                  sx={{
+                    fontSize: "12px",
+                    backgroundColor: "#1E90FF",
+                    "&:hover": {
+                      backgroundColor: "#d32f2f",
+                    },
+                    mt: 2,
+                  }}
+                >
+                  Cancelar
+                </Button>
+              </Grid>
+            )}
+          </Box>
         </Grid>
         <Box sx={{ textAlign: "center", mt: 4 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              if (equipoSeleccionado) {
+                setFormData(equipoSeleccionado);
+              }
+              setOriginalImageBeforeEdit(null);
+              setEditingImageIndex(null);
+              setEditingNameIndex(null);
+              setNuevaImagenTemporal(null);
+              setNombreTemporal("");
+            }}
+            sx={{
+              height: "45px",
+              color: "#ffffff",
+              backgroundColor: "#1E90FF",
+              "&:hover": {
+                backgroundColor: "#d32f2f",
+              },
+              mt: 2,
+              mb: 2,
+            }}
+          >
+            Cancelar Todo
+          </Button>
           <Button
             variant="contained"
             color="primary"
@@ -500,8 +697,19 @@ const EditarEquipo = () => {
               actualizarEquipoConCambios(formData, equipoSeleccionado.id);
               console.log("Datos guardados:", formData);
             }}
+            sx={{
+              height: "45px",
+              color: "#ffffff",
+              backgroundColor: "#1E90FF",
+              "&:hover": {
+                backgroundColor: "#28a745",
+              },
+              mt: 2,
+              mb: 2,
+              ml: 2,
+            }}
           >
-            Guardar Cambios
+            Guardar Equipo
           </Button>
         </Box>
       </Grid>
