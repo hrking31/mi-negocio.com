@@ -10,6 +10,7 @@ import {
   VistaEditarEquipo,
   VistaEliminarEquipo,
   VistaCrearUsuarios,
+  VistaEliminarUsuario,
 } from "./Views";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ProtectedRoutes } from "./Components/ProtectedRoutes/ProtectedRoutes";
@@ -21,11 +22,10 @@ function App() {
 
   return (
     <div>
-      {location.pathname === "/" ? null : <NavBar />}
-      {location.pathname === "/" && <NavBar />}
+      {location.pathname !== "/" && <NavBar />}
       <Routes>
         <Route
-          path="/admin"
+          path="/adminforms"
           element={
             <ProtectedRoutes>
               <AdminForms />
@@ -86,6 +86,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <VistaCrearUsuarios />
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/vistaeliminarusuario"
+          element={
+            <ProtectedRoutes>
+              <VistaEliminarUsuario />
             </ProtectedRoutes>
           }
         />

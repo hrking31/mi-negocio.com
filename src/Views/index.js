@@ -9,6 +9,7 @@ import VistaSeleccionarEquipo from "../Views/VistaSeleccionarEquipo/VistaSelecci
 import VistaEliminarEquipo from "../Views/VistaEliminarEquipo/VistaEliminarEquipo";
 import VistaEditarEquipo from "../Views/VistaEditarEquipo/VistaEditarEquipo";
 import VistaCrearUsuarios from "../Views/VistaCrearUsuarios/VistaCrearUsuarios";
+import VistaEliminarUsuario from "../Views/VistaEliminarUsuario/VistaEliminarUsuario";
 
 export {
   // Landing,
@@ -22,4 +23,5 @@ export {
   VistaEliminarEquipo,
   VistaEditarEquipo,
   VistaCrearUsuarios,
+  VistaEliminarUsuario,
 };

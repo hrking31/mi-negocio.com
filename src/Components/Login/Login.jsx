@@ -12,9 +12,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { togglePasswordVisibility } from "../../Store/Slices/passwordSlice";
 import { useAuth } from "../../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ redirectPath }) {
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -27,6 +27,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = ({ target: { name, value } }) =>
     setUser({ ...user, [name]: value });
@@ -36,7 +37,9 @@ export default function Login() {
     setError("");
     try {
       await login(user.email, user.password);
-      navigate("/admin");
+      // navigate("/adminforms");
+     navigate(redirectPath ? "/vistaeliminar" : "/adminforms");
+
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         setError("Contraseña incorrecta");

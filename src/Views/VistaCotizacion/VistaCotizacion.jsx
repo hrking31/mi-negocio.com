@@ -66,7 +66,7 @@ export default function VistaCotizacion() {
         <Grid item xs={12} sm={6} md={4}>
           <Button
             component={Link}
-            to="/admin"
+            to="/adminforms"
             variant="contained"
             fullWidth
             sx={{

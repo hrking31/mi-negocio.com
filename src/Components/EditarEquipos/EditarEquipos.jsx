@@ -266,30 +266,35 @@ const EditarEquipo = () => {
     setEditingNameIndex(null);
   };
 
-  const handleNewIndexChange = (index, newIndex) => {
-    setNewIndices((prev) => ({
-      ...prev,
-      [index]: newIndex,
-    }));
-  };
+  const cambiarOrden = () => {
+    const nuevaLista = [];
 
-  // Maneja el guardado de los nuevos índices
-  const handleSave = () => {
-    const updatedImages = [...formData.images];
-    const newOrder = { ...newIndices };
+    const indicesActuales = Object.keys(newIndices);
+    const totalImagenes = formData.images.length;
 
-    // Aseguramos que los índices sean válidos y estén dentro de los límites
-    Object.entries(newOrder).forEach(([index, newIndex]) => {
-      const imageIndex = parseInt(index, 10);
-      if (newIndex >= 0 && newIndex < updatedImages.length) {
-        updatedImages[newIndex] = formData.images[imageIndex];
-      }
+    if (indicesActuales.length !== totalImagenes) {
+      setSnackbarMessage(
+        "Debes definir el nuevo índice para todas las imágenes."
+      );
+      setSnackbarSeverity("warning");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    const copiaImagenes = [...formData.images];
+    Object.entries(newIndices).forEach(([indexOriginal, nuevoIndex]) => {
+      nuevaLista[nuevoIndex] = copiaImagenes[indexOriginal];
     });
 
     setFormData((prev) => ({
       ...prev,
-      images: updatedImages,
+      images: nuevaLista,
     }));
+
+    setNewIndices({});
+    setSnackbarMessage("Nuevo orden aplicado.");
+    setSnackbarSeverity("success");
+    setOpenSnackbar(true);
   };
 
   const handleCloseSnackbar = () => {
@@ -434,6 +439,24 @@ const EditarEquipo = () => {
                       <Typography sx={{ color: "#00008B", marginBottom: 2 }}>
                         Posición actual: {index}
                       </Typography>
+                      <TextField
+                        label="Nueva Posición"
+                        type="number"
+                        value={newIndices[index] ?? ""}
+                        onChange={(e) =>
+                          setNewIndices({
+                            ...newIndices,
+                            [index]: Number(e.target.value),
+                          })
+                        }
+                        size="small"
+                        sx={{ flexGrow: 1, mr: 2 }}
+                        inputProps={{
+                          min: 0,
+                          max: formData.images.length - 1,
+                        }}
+                      />
+
                       {editingImageIndex !== index ? (
                         <Button
                           variant="contained"
@@ -504,19 +527,6 @@ const EditarEquipo = () => {
                               />
                             </>
                           )}
-                          <TextField
-                            type="number"
-                            label="Nuevo índice"
-                            onChange={(e) =>
-                              handleNewIndexChange(
-                                index,
-                                parseInt(e.target.value)
-                              )
-                            }
-                            size="small"
-                            sx={{ flexGrow: 1, mr: 2 }}
-                          />
-                          <button onClick={handleSave}>Guardar</button>
                           <Button
                             variant="contained"
                             onClick={() => handleDeleteImageByIndex(index)}
@@ -712,6 +722,24 @@ const EditarEquipo = () => {
             Guardar Equipo
           </Button>
         </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={cambiarOrden}
+          sx={{
+            height: "45px",
+            color: "#ffffff",
+            backgroundColor: "#1E90FF",
+            "&:hover": {
+              backgroundColor: "#28a745",
+            },
+            mt: 2,
+            mb: 2,
+            ml: 2,
+          }}
+        >
+          Aplicar cambios de orden
+        </Button>
       </Grid>
       <Snackbar
         open={openSnackbar}
