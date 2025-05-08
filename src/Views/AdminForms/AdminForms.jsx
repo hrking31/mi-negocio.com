@@ -2,11 +2,13 @@ import style from "./AdminForms.module.css";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import Button from "@mui/material/Button";
+import { useSelector } from "react-redux";
 import { Typography, Box, Grid } from "@mui/material";
 
 export default function AdminForms() {
   const { user, logout, loading } = useAuth();
-
+  const permisos = useSelector((state) => state.user.permisos);
+  
   const handlerLogout = async () => {
     await logout();
   };
@@ -26,112 +28,124 @@ export default function AdminForms() {
         sx={{ marginBottom: 4 }}
       >
         <Grid item xs={12} sm={6} md={4}>
-          <Button
-            component={Link}
-            to="/vistacotizacion"
-            variant="contained"
-            fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
-          >
-            COTIZACIÓN
-          </Button>
+          {permisos.includes("cotizacion") && (
+            <Button
+              component={Link}
+              to="/vistacotizacion"
+              variant="contained"
+              fullWidth
+              sx={{
+                height: "45px",
+                color: "#ffffff",
+                backgroundColor: "#1E90FF",
+                "&:hover": {
+                  backgroundColor: "#4682B4",
+                },
+              }}
+            >
+              COTIZACIÓN
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Button
-            component={Link}
-            to="/vistacuentadecobro"
-            variant="contained"
-            fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
-          >
-            CUENTA DE COBRO
-          </Button>
+          {permisos.includes("cuentaCombro") && (
+            <Button
+              component={Link}
+              to="/vistacuentadecobro"
+              variant="contained"
+              fullWidth
+              sx={{
+                height: "45px",
+                color: "#ffffff",
+                backgroundColor: "#1E90FF",
+                "&:hover": {
+                  backgroundColor: "#4682B4",
+                },
+              }}
+            >
+              CUENTA DE COBRO
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Button
-            component={Link}
-            to="/vistacreaequipo"
-            variant="contained"
-            fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
-          >
-            CREAR EQUIPO
-          </Button>
+          {permisos.includes("crearEquipos") && (
+            <Button
+              component={Link}
+              to="/vistacreaequipo"
+              variant="contained"
+              fullWidth
+              sx={{
+                height: "45px",
+                color: "#ffffff",
+                backgroundColor: "#1E90FF",
+                "&:hover": {
+                  backgroundColor: "#4682B4",
+                },
+              }}
+            >
+              CREAR EQUIPO
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Button
-            component={Link}
-            to="/vistaseleccionarequipo"
-            variant="contained"
-            fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
-          >
-            EDITAR o ELIMINAR EQUIPO
-          </Button>
+          {permisos.includes("eliminarEditarEquipos") && (
+            <Button
+              component={Link}
+              to="/vistaseleccionarequipo"
+              variant="contained"
+              fullWidth
+              sx={{
+                height: "45px",
+                color: "#ffffff",
+                backgroundColor: "#1E90FF",
+                "&:hover": {
+                  backgroundColor: "#4682B4",
+                },
+              }}
+            >
+              EDITAR o ELIMINAR EQUIPO
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Button
-            component={Link}
-            to="/VistaCrearUsuarios"
-            variant="contained"
-            fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
-          >
-            CREAR USUARIOS
-          </Button>
+          {permisos.includes("crearUsuarios") && (
+            <Button
+              component={Link}
+              to="/VistaCrearUsuarios"
+              variant="contained"
+              fullWidth
+              sx={{
+                height: "45px",
+                color: "#ffffff",
+                backgroundColor: "#1E90FF",
+                "&:hover": {
+                  backgroundColor: "#4682B4",
+                },
+              }}
+            >
+              CREAR USUARIOS
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Button
-            component={Link}
-            to="/VistaEliminarUsuario"
-            variant="contained"
-            fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
-          >
-            ELIMINAR USUARIOS
-          </Button>
+          {permisos.includes("eliminarUsuarios") && (
+            <Button
+              component={Link}
+              to="/VistaEliminarUsuario"
+              variant="contained"
+              fullWidth
+              sx={{
+                height: "45px",
+                color: "#ffffff",
+                backgroundColor: "#1E90FF",
+                "&:hover": {
+                  backgroundColor: "#4682B4",
+                },
+              }}
+            >
+              ELIMINAR USUARIOS
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Button

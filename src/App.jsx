@@ -1,6 +1,7 @@
 import {
   Home,
-  // Landing,
+  Login,
+  Landing,
   Detail,
   AdminForms,
   VistaCotizacion,
@@ -11,10 +12,10 @@ import {
   VistaEliminarEquipo,
   VistaCrearUsuarios,
   VistaEliminarUsuario,
+  VistaNoAutorizada,
 } from "./Views";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ProtectedRoutes } from "./Components/ProtectedRoutes/ProtectedRoutes";
-import Login from "./Components/Login/Login";
 import NavBar from "./Components/NavBar/NavBar";
 
 function App() {
@@ -35,7 +36,13 @@ function App() {
         <Route
           path="/vistacotizacion"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes
+              allowedRoles={[
+                "administrador",
+                "gestorIntegral",
+                "gestorFacturacion",
+              ]}
+            >
               <VistaCotizacion />
             </ProtectedRoutes>
           }
@@ -43,7 +50,13 @@ function App() {
         <Route
           path="/vistacuentadecobro"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes
+              allowedRoles={[
+                "administrador",
+                "gestorIntegral",
+                "gestorFacturacion",
+              ]}
+            >
               <VistaCuentaDeCobro />
             </ProtectedRoutes>
           }
@@ -51,7 +64,9 @@ function App() {
         <Route
           path="/vistacreaequipo"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes
+              allowedRoles={["administrador", "gestorEditor", "gestorIntegral"]}
+            >
               <VistaCreaEquipo />
             </ProtectedRoutes>
           }
@@ -59,7 +74,9 @@ function App() {
         <Route
           path="/vistaseleccionarequipo"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes
+              allowedRoles={["administrador", "gestorEditor", "gestorIntegral"]}
+            >
               <VistaSeleccionarEquipo />
             </ProtectedRoutes>
           }
@@ -68,7 +85,9 @@ function App() {
           exact
           path="/vistaeliminarequipo"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes
+              allowedRoles={["administrador", "gestorEditor", "gestorIntegral"]}
+            >
               <VistaEliminarEquipo />
             </ProtectedRoutes>
           }
@@ -76,7 +95,9 @@ function App() {
         <Route
           path="/vistaeditarequipo"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes
+              allowedRoles={["administrador", "gestorEditor", "gestorIntegral"]}
+            >
               <VistaEditarEquipo />
             </ProtectedRoutes>
           }
@@ -84,7 +105,7 @@ function App() {
         <Route
           path="/vistacrearusuarios"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes allowedRoles={["administrador"]}>
               <VistaCrearUsuarios />
             </ProtectedRoutes>
           }
@@ -92,17 +113,16 @@ function App() {
         <Route
           path="/vistaeliminarusuario"
           element={
-            <ProtectedRoutes>
+            <ProtectedRoutes allowedRoles={["administrador"]}>
               <VistaEliminarUsuario />
             </ProtectedRoutes>
           }
         />
-        {/* <Route path="/" element={<Landing />} /> */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/Home" element={<Home />} />
-        {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/login" element={<Login />} />
         <Route exact path="/detail/:id" element={<Detail />} />
+        <Route path="/vistanoautorizada" element={<VistaNoAutorizada />} />
       </Routes>
     </div>
   );

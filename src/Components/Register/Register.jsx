@@ -13,13 +13,20 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Tooltip,
 } from "@mui/material";
+import { doc, setDoc } from "firebase/firestore";
+import { db, auth } from "../../Components/Firebase/Firebase";
+import RolesPermisos from "../RolesPermisos/RolesPermisos";
 
 export default function Register() {
-  const [user, setUser] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [user, setUser] = useState({ name: "", email: "", password: "" });
+  const [roleSeleccionado, setRoleSeleccionado] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error", 
+  });
   const [loading, setLoading] = useState(false);
 
   const { signup } = useAuth();
@@ -30,7 +37,7 @@ export default function Register() {
   };
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   const isValidEmail = (email) => {
@@ -39,47 +46,82 @@ export default function Register() {
   };
 
   const handleSubmit = async (event) => {
-    setLoading(true);
     event.preventDefault();
-    setError("");
-    setSuccess(false);
+    setSnackbar({ open: false, message: "", severity: "error" });
+
+    const permisos = RolesPermisos[roleSeleccionado];
+
+    if (!user.name.trim()) {
+      setSnackbar({
+        open: true,
+        message: "Por favor, ingrese un nombre válido.",
+        severity: "error",
+      });
+      return;
+    }
 
     if (!isValidEmail(user.email)) {
-      setError("Formato de correo no válido");
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: "Formato de correo no válido",
+        severity: "error",
+      });
       return;
     }
 
     if (user.password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres");
-      setOpenSnackbar(true);
+      setSnackbar({
+        open: true,
+        message: "La contraseña debe tener al menos 6 caracteres",
+        severity: "error",
+      });
       return;
     }
 
-    if (!user.role) {
-      setError("Selecciona un rol");
-      setOpenSnackbar(true);
-      setLoading(false);
+    if (!roleSeleccionado) {
+      setSnackbar({
+        open: true,
+        message: "Por favor, selecciona un rol",
+        severity: "error",
+      });
       return;
     }
 
     try {
-      await signup(user.email, user.password);
-      setSuccess(true);
+      setLoading(true);
+      const newUserCredential = await signup(user.email, user.password);
+      const uid = newUserCredential.user.uid;
+
       await setDoc(doc(db, "users", uid), {
+        name: user.name,
         email: user.email,
-        role: user.role,
+        role: roleSeleccionado,
+        permisos,
       });
-      setOpenSnackbar(true);
-      setLoading(false);
+
+      setSnackbar({
+        open: true,
+        message: "Usuario registrado con éxito",
+        severity: "success",
+      });
+
       setTimeout(() => navigate("/home"), 1500);
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
-        setError("El correo ya está registrado");
+        setSnackbar({
+          open: true,
+          message: "El correo ya está registrado",
+          severity: "error",
+        });
       } else {
-        setError("Error al crear la cuenta" + error.message);
+        setSnackbar({
+          open: true,
+          message: "Error al crear la cuenta: " + error.message,
+          severity: "error",
+        });
       }
-      setOpenSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,14 +146,21 @@ export default function Register() {
       </Typography>
 
       <TextField
+        label="Nombre"
+        name="name"
+        type="text"
+        value={user.name}
+        onChange={handleChange}
+        fullWidth
+      />
+
+      <TextField
         label="Correo"
         name="email"
         type="email"
         value={user.email}
         onChange={handleChange}
-        placeholder="tucorreo@compañia.ltd"
         fullWidth
-        required
       />
 
       <TextField
@@ -120,23 +169,32 @@ export default function Register() {
         type="password"
         value={user.password}
         onChange={handleChange}
-        placeholder="******"
         fullWidth
-        required
       />
-
-      <FormControl fullWidth required>
+      <FormControl fullWidth>
         <InputLabel id="rol-label">Rol</InputLabel>
         <Select
           labelId="rol-label"
           name="role"
-          value={user.role}
-          onChange={handleChange}
+          value={roleSeleccionado || ""}
+          onChange={(e) => setRoleSeleccionado(e.target.value)}
           label="Rol"
         >
-          <MenuItem value="admin">Administrador</MenuItem>
-          <MenuItem value="editor">Editor</MenuItem>
-          <MenuItem value="usuario">Usuario</MenuItem>
+          <MenuItem value="" disabled>
+            Selecciona un Rol
+          </MenuItem>
+          <Tooltip title="Acceso Total">
+            <MenuItem value="administrador">Administrador</MenuItem>
+          </Tooltip>
+          <Tooltip title="Crear, Edita o Elimina Equipos">
+            <MenuItem value="gestorEditor">Gestor Editor</MenuItem>
+          </Tooltip>
+          <Tooltip title="Cotizaciones y Cuentas de Cobro">
+            <MenuItem value="gestorFacturacion">Gestor Facturación</MenuItem>
+          </Tooltip>
+          <Tooltip title="Editor y Facturación">
+            <MenuItem value="gestorIntegral">Gestor Integral</MenuItem>
+          </Tooltip>
         </Select>
       </FormControl>
 
@@ -145,18 +203,18 @@ export default function Register() {
       </Button>
 
       <Snackbar
-        open={openSnackbar}
+        open={snackbar.open}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
-          severity={success ? "success" : "error"}
+          severity={snackbar.severity}
           onClose={handleCloseSnackbar}
           variant="filled"
           sx={{ width: "100%" }}
         >
-          {success ? "Usuario registrado con éxito" : error}
+          {snackbar.message}
         </Alert>
       </Snackbar>
     </Box>
