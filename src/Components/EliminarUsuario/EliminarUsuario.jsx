@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, deleteUser } from "firebase/auth";
-import { auth } from "../Firebase/Firebase";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db, auth } from "../Firebase/Firebase";
 import LoadingLogo from "../../Components/LoadingLogo/LoadingLogo";
 import {
   Box,
@@ -31,7 +32,14 @@ export default function EliminarUsuario() {
         email,
         password
       );
-      await deleteUser(userCredential.user);
+      const user = userCredential.user;
+      console.log("UID:", user.uid);
+
+      const userRef = doc(db, "users", userCredential.user.uid);
+      await deleteDoc(userRef);
+
+      await deleteUser(user);
+
       setSnackbar({
         open: true,
         message: "Usuario eliminado con éxito",
@@ -99,4 +107,4 @@ export default function EliminarUsuario() {
   );
 }
 
-// recordar mostrar la notificaciones de alrt en la pantalla de login
+// recordar mostrar la notificaciones de alrt en la pantalla de login, validar correos

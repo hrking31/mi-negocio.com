@@ -183,18 +183,29 @@ export default function Register() {
           <MenuItem value="" disabled>
             Selecciona un Rol
           </MenuItem>
-          <Tooltip title="Acceso Total">
-            <MenuItem value="administrador">Administrador</MenuItem>
-          </Tooltip>
-          <Tooltip title="Crear, Edita o Elimina Equipos">
-            <MenuItem value="gestorEditor">Gestor Editor</MenuItem>
-          </Tooltip>
-          <Tooltip title="Cotizaciones y Cuentas de Cobro">
-            <MenuItem value="gestorFacturacion">Gestor Facturación</MenuItem>
-          </Tooltip>
-          <Tooltip title="Editor y Facturación">
-            <MenuItem value="gestorIntegral">Gestor Integral</MenuItem>
-          </Tooltip>
+          <MenuItem value="administrador">
+            <Tooltip title="Acceso Total" placement="right">
+              <Box component="span">Administrador</Box>
+            </Tooltip>
+          </MenuItem>
+
+          <MenuItem value="gestorEditor">
+            <Tooltip title="Crear, Edita o Elimina Equipos" placement="right">
+              <Box component="span">Gestor Editor</Box>
+            </Tooltip>
+          </MenuItem>
+
+          <MenuItem value="gestorFacturacion">
+            <Tooltip title="Cotizaciones y Cuentas de Cobro" placement="right">
+              <Box component="span">Gestor Facturación</Box>
+            </Tooltip>
+          </MenuItem>
+
+          <MenuItem value="gestorIntegral">
+            <Tooltip title="Editor y Facturación" placement="right">
+              <Box component="span">Gestor Integral</Box>
+            </Tooltip>
+          </MenuItem>
         </Select>
       </FormControl>
 
