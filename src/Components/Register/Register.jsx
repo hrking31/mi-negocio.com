@@ -14,20 +14,28 @@ import {
   InputLabel,
   FormControl,
   Tooltip,
+  IconButton,
 } from "@mui/material";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import { doc, setDoc } from "firebase/firestore";
 import { db, auth } from "../../Components/Firebase/Firebase";
+import { togglePasswordVisibility } from "../../Store/Slices/passwordSlice";
 import RolesPermisos from "../RolesPermisos/RolesPermisos";
 
 export default function Register() {
+  const dispatch = useDispatch();
   const [user, setUser] = useState({ name: "", email: "", password: "" });
   const [roleSeleccionado, setRoleSeleccionado] = useState("");
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "error", 
+    severity: "error",
   });
   const [loading, setLoading] = useState(false);
+
+  const passwordVisible = useSelector((state) => state.password);
+  const passwordType = passwordVisible ? "text" : "password";
 
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -166,10 +174,22 @@ export default function Register() {
       <TextField
         label="Contraseña"
         name="password"
-        type="password"
+        type={passwordType}
         value={user.password}
         onChange={handleChange}
         fullWidth
+        InputProps={{
+          style: { color: "#00008B" },
+          endAdornment: (
+            <IconButton onClick={() => dispatch(togglePasswordVisibility())}>
+              {passwordVisible ? (
+                <FaEyeSlash color="#00008B" />
+              ) : (
+                <FaEye color="#00008B" />
+              )}
+            </IconButton>
+          ),
+        }}
       />
       <FormControl fullWidth>
         <InputLabel id="rol-label">Rol</InputLabel>
