@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import LoadingLogo from "../../Components/LoadingLogo/LoadingLogo";
 import { useAuth } from "../../Context/AuthContext";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { storage, db } from "../../Components/Firebase/Firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -17,13 +18,16 @@ import { collection, setDoc, doc } from "firebase/firestore";
 import style from "./VistaCreaEquipo.module.css";
 
 export default function VistaCreaEquipo() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { name, genero } = useSelector((state) => state.user);
   const [formValues, setFormValues] = useState({ name: "", description: "" });
   const [images, setImages] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const saludo = genero === "femenino" ? "Bienvenida" : "Bienvenido";
 
   const handlerInputChange = (event) => {
     const { name, value } = event.target;
@@ -130,7 +134,7 @@ export default function VistaCreaEquipo() {
           variant="h4"
           sx={{ color: "#8B3A3A", fontWeight: "bold", mb: 4 }}
         >
-          Bienvenido/a {user?.email}
+          {saludo} {name}
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>

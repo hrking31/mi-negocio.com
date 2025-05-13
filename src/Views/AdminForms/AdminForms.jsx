@@ -1,4 +1,3 @@
-import style from "./AdminForms.module.css";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import Button from "@mui/material/Button";
@@ -6,9 +5,11 @@ import { useSelector } from "react-redux";
 import { Typography, Box, Grid } from "@mui/material";
 
 export default function AdminForms() {
-  const { user, logout, loading } = useAuth();
-  const permisos = useSelector((state) => state.user.permisos);
-  
+  const { logout } = useAuth();
+  const { name, genero, permisos } = useSelector((state) => state.user);
+
+  const saludo = genero === "femenino" ? "Bienvenida" : "Bienvenido";
+
   const handlerLogout = async () => {
     await logout();
   };
@@ -17,7 +18,7 @@ export default function AdminForms() {
     <Box sx={{ padding: 2, textAlign: "center" }}>
       <Box sx={{ marginBottom: 4 }}>
         <Typography variant="h4" sx={{ color: "#8B3A3A", fontWeight: "bold" }}>
-          Bienvenida {user.email}, ¿Qué vamos a hacer hoy?
+           {saludo} {name}, ¿Qué vamos a hacer hoy?
         </Typography>
       </Box>
 

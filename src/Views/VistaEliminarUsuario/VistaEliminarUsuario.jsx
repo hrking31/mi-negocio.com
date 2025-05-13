@@ -1,10 +1,18 @@
 import { Typography, Box, Grid, Button } from "@mui/material";
 import EliminarUsuario from "../../Components/EliminarUsuario/EliminarUsuario";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useAuth } from "../../Context/AuthContext";
 
 export default function VistaEliminarUsuario() {
-  const { user, logout } = useAuth();
+  const {name, genero} = useSelector((state) => state.user);
+  const { logout } = useAuth();
+
+  const saludo = genero === "femenino" ? "Bienvenida" : "Bienvenido";
+
+  const handlerLogout = async () => {
+    await logout();
+  };
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -12,9 +20,15 @@ export default function VistaEliminarUsuario() {
         variant="h4"
         sx={{ color: "#8B3A3A", fontWeight: "bold", mb: 4 }}
       >
-        Bienvenido/a {user?.email}
+        {saludo} {name}
       </Typography>
       <EliminarUsuario />
+      <Grid
+        container
+        spacing={2}
+        justifyContent="center"
+        sx={{ marginBottom: 4, mt: 2 }}
+      >
         <Grid item xs={12} sm={6} md={4}>
           <Button
             component={Link}
@@ -22,7 +36,6 @@ export default function VistaEliminarUsuario() {
             variant="contained"
             fullWidth
             sx={{
-              marginTop: 2,
               height: "45px",
               color: "#ffffff",
               backgroundColor: "#1E90FF",
@@ -31,8 +44,27 @@ export default function VistaEliminarUsuario() {
               },
             }}
           >
-          CANCELAR
+            MENU
           </Button>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Button
+            onClick={handlerLogout}
+            variant="contained"
+            fullWidth
+            sx={{
+              height: "45px",
+              color: "#ffffff",
+              backgroundColor: "#1E90FF",
+              "&:hover": {
+                backgroundColor: "#DC143C",
+              },
+              margin: "0 auto",
+            }}
+          >
+            CERRAR SESIÓN
+          </Button>
+        </Grid>
       </Grid>
     </Box>
   );

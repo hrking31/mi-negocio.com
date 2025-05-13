@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
-import { Box, Grid, Button, Snackbar, Alert } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { Box, Grid, Button, Snackbar, Alert, Typography  } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import SearchComponent from "../../Components/SearchComponent/SearchComponent";
 import CardsSearchEquipos from "../../Components/CardsSearchEquipos/CardsSearchEquipos";
 import {
@@ -11,13 +11,16 @@ import {
 } from "../../Store/Slices/searchSlice";
 
 const VistaSeleccionarEquipo = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [equipoSeleccionado, setEquipoSeleccionado] = useState(null);
+  const { name, genero } = useSelector((state) => state.user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
+
+  const saludo = genero === "femenino" ? "Bienvenida" : "Bienvenido";
 
   const handleSearch = (searchTerm) => {
     dispatch(fetchEquipos(searchTerm));
@@ -67,6 +70,19 @@ const VistaSeleccionarEquipo = () => {
     <Box sx={{ padding: 2 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
+          <Box sx={{ marginBottom: { xs: 1, sm: 2 }, width: "100%" }}>
+            <Typography
+              variant="h4"
+              sx={{
+                color: "#00008B",
+                fontWeight: "bold",
+                overflowWrap: "break-word",
+                fontSize: { xs: "h5.fontSize", sm: "h4.fontSize" },
+              }}
+            >
+              {saludo} {name} Busca el equipo por su nombre.
+            </Typography>
+          </Box>
           <Box sx={{ padding: 2 }}>
             <Box sx={{ marginBottom: 4 }}>
               <SearchComponent onSearch={handleSearch} />

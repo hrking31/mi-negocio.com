@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { TextField, Button, Box, Grid, Typography } from "@mui/material";
 
 const SearchComponent = ({ onSearch }) => {
@@ -22,19 +22,6 @@ const SearchComponent = ({ onSearch }) => {
         textAlign: "center",
       }}
     >
-      <Box sx={{ marginBottom: { xs: 1, sm: 2 }, width: "100%" }}>
-        <Typography
-          variant="h4"
-          sx={{
-            color: "#00008B",
-            fontWeight: "bold",
-            overflowWrap: "break-word",
-            fontSize: { xs: "h5.fontSize", sm: "h4.fontSize" },
-          }}
-        >
-          Busca el equipo por su nombre.
-        </Typography>
-      </Box>
 
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} sm={8} md={9}>

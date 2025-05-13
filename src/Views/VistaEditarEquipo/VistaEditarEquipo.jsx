@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
-import { Box, Grid, Button } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";;
 import EditarEquipos from "../../Components/EditarEquipos/EditarEquipos";
 
 const VistaEditarEquipo = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   const handlerLogout = async () => {
     await logout();

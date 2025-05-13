@@ -27,6 +27,7 @@ export default function Register() {
   const dispatch = useDispatch();
   const [user, setUser] = useState({ name: "", email: "", password: "" });
   const [roleSeleccionado, setRoleSeleccionado] = useState("");
+  const [generoSeleccionado, setGeneroSeleccionado] = useState("");
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -102,6 +103,7 @@ export default function Register() {
 
       await setDoc(doc(db, "users", uid), {
         name: user.name,
+        genero: generoSeleccionado,
         email: user.email,
         role: roleSeleccionado,
         permisos,
@@ -161,6 +163,28 @@ export default function Register() {
         onChange={handleChange}
         fullWidth
       />
+      <FormControl fullWidth>
+        <InputLabel id="genero-label">Genero</InputLabel>
+        <Select
+          labelId="genero-label"
+          name="genero"
+          value={generoSeleccionado || ""}
+          onChange={(e) => setGeneroSeleccionado(e.target.value)}
+          label="Genero"
+        >
+          <MenuItem value="" disabled>
+            Selecciona un Genero
+          </MenuItem>
+
+          <MenuItem value="femenino">
+            <Box component="span">Femenino</Box>
+          </MenuItem>
+
+          <MenuItem value="masculino">
+            <Box component="span">Masculino</Box>
+          </MenuItem>
+        </Select>
+      </FormControl>
 
       <TextField
         label="Correo"

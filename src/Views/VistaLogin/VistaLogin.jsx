@@ -54,9 +54,9 @@ export default function Login() {
       const userDoc = await getDoc(userDocRef);
 
       if (userDoc.exists()) {
-        const { role, permisos } = userDoc.data();
+        const { name, genero, role, permisos } = userDoc.data();
 
-        dispatch(setUserData({ uid, email, role, permisos }));
+        dispatch(setUserData({ uid, email, name, genero, role, permisos }));
 
         navigate("/adminforms");
       } else {
