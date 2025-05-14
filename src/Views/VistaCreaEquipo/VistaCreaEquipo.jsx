@@ -136,8 +136,16 @@ export default function VistaCreaEquipo() {
         >
           {saludo} {name}
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={2} justifyContent="center">
+          <Box
+            sx={{
+              width: { xs: "100%", md: "50%" }, // 100% en móviles, 50% en pantallas medianas o más
+              display: "flex",
+              justifyContent: "center", // Centra contenido horizontalmente
+              alignItems: "center", // Centra contenido verticalmente (si se usa altura)
+              flexDirection: "column", // Opcional: organiza verticalmente el contenido interno
+            }}
+          >
             <TextField
               name="name"
               label="Nombre del equipo"
@@ -160,33 +168,57 @@ export default function VistaCreaEquipo() {
               images.map((img, index) => (
                 <Box
                   key={img.id}
-                  sx={{ mb: 2, mt: 2, display: "flex", alignItems: "center" }}
+                  sx={{
+                    mb: 2,
+                    mt: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
                 >
-                  <img
-                    src={img.preview}
-                    alt={`preview-${index}`}
-                    className={style.previewImage}
-                    style={{ width: 80, height: 80, marginRight: 10 }}
-                  />
-                  <TextField
-                    label="Nombre de la imagen"
-                    value={img.name}
-                    onChange={(e) => handleNameChange(index, e.target.value)}
-                    size="small"
-                    sx={{ flexGrow: 1, mr: 2 }}
-                  />
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleRemoveImage(index)}
+                  <Box
                     sx={{
-                      marginLeft: 2,
-                      width: "200px",
-                      height: "45px",
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                      maxWidth: "100%",
                     }}
                   >
-                    Eliminar
-                  </Button>
+                    <Box
+                      component="img"
+                      src={img.preview}
+                      alt={`preview-${index}`}
+                      className={style.previewImage}
+                      sx={{
+                        width: { xs: 80, sm: 90, md: 100 },
+                        height: { xs: 80, sm: 90, md: 100 },
+                        marginRight: 1.5,
+                      }}
+                    />
+                    {/* <Box> */}
+                      <TextField
+                        label="Nombre de la imagen"
+                        value={img.name}
+                        onChange={(e) =>
+                          handleNameChange(index, e.target.value)
+                        }
+                        size="small"
+                        sx={{
+                          marginRight: 1.5,
+                          flexGrow: 1,
+                        }}
+                      />
+                    {/* </Box> */}
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleRemoveImage(index)}
+                      // sx={{ flexGrow: 1 }}
+                    >
+                      Eliminar
+                    </Button>
+                  </Box>
                 </Box>
               ))}
             <Box
@@ -197,22 +229,19 @@ export default function VistaCreaEquipo() {
               }}
             >
               <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-                <Button
-                  variant="contained"
-                  component="span"
-                  sx={{
-                    height: "45px",
-                    color: "#ffffff",
-                    backgroundColor: "#1E90FF",
-                    "&:hover": {
-                      backgroundColor: "#4682B4",
-                    },
-                    mt: 2,
-                    mb: 2,
-                  }}
-                >
-                  Selecciona Imagen
-                </Button>
+                <Grid container spacing={2} justifyContent="center">
+                  <Button
+                    variant="upload"
+                    component="span"
+                    fullWidth
+                    sx={{
+                      mt: 2,
+                      mb: 2,
+                    }}
+                  >
+                    Selecciona Imagen
+                  </Button>
+                </Grid>
               </label>
               <input
                 id="file-upload"
@@ -222,42 +251,22 @@ export default function VistaCreaEquipo() {
                 style={{ display: "none" }}
               />
             </Box>
-          </Grid>
+          </Box>
         </Grid>
 
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} sm={6} md={4}>
             <Button
               type="submit"
-              variant="contained"
+              variant="success"
               disabled={loading}
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
-              Crear Equipo
+              CREAR EQUIPO
             </Button>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <Button
-              onClick={handleCancel}
-              variant="contained"
-              fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#d32f2f",
-                },
-              }}
-            >
+            <Button onClick={handleCancel} variant="danger" fullWidth>
               CANCELAR
             </Button>
           </Grid>
@@ -267,32 +276,12 @@ export default function VistaCreaEquipo() {
               to="/adminforms"
               variant="contained"
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
               MENU
             </Button>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <Button
-              onClick={handlerLogout}
-              variant="contained"
-              fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
-            >
+            <Button onClick={handlerLogout} variant="danger" fullWidth>
               CERRAR SESION
             </Button>
           </Grid>

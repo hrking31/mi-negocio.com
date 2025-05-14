@@ -4,7 +4,6 @@ import {
   Container,
   Typography,
   Box,
-  Grid,
   useTheme,
   useMediaQuery,
 } from "@mui/material";

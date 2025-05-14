@@ -30,7 +30,7 @@ export default function VistaCuentaDeCobro() {
         container
         spacing={2}
         justifyContent="center"
-        sx={{ marginBottom: 4 }}
+        sx={{ marginBottom: 4, mt: 2 }}
       >
         <Grid item xs={12} sm={6} md={4}>
           <PDFDownloadLink
@@ -39,16 +39,8 @@ export default function VistaCuentaDeCobro() {
           >
             {({ loading }) => (
               <Button
-                variant="contained"
+                variant="success"
                 fullWidth
-                sx={{
-                  height: "45px",
-                  color: "#ffffff",
-                  backgroundColor: "#1E90FF",
-                  "&:hover": {
-                    backgroundColor: "#4682B4",
-                  },
-                }}
               >
                 {loading ? "Cargando..." : "Descargar PDF"}
               </Button>
@@ -61,32 +53,12 @@ export default function VistaCuentaDeCobro() {
             to="/adminforms"
             variant="contained"
             fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
           >
             MENU
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <Button
-            onClick={handlerLogout}
-            variant="contained"
-            fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#4682B4",
-              },
-            }}
-          >
+          <Button onClick={handlerLogout} variant="danger" fullWidth>
             CERRAR SESION
           </Button>
         </Grid>

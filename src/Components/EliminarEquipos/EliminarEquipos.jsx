@@ -130,13 +130,9 @@ const EliminarEquipo = () => {
 
       <Button
         variant="contained"
-        color="error"
+        // color="error"
         onClick={handleDelete}
-        sx={{
-          marginLeft: 2,
-          width: "200px",
-          height: "45px",
-        }}
+
       >
         Eliminar Equipo
       </Button>

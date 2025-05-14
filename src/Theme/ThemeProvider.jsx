@@ -57,6 +57,38 @@ export const CustomThemeProvider = ({ children }) => {
                 padding: "8px 20px",
               },
             },
+            variants: [
+              {
+                props: { variant: "danger" },
+                style: ({ theme }) => ({
+                  color: theme.palette.primary.contrastText,
+                  backgroundColor: "#7C4DFF",
+                  "&:hover": {
+                    backgroundColor: "#DC143C",
+                  },
+                }),
+              },
+              {
+                props: { variant: "success" },
+                style: ({ theme }) => ({
+                  color: theme.palette.primary.contrastText,
+                  backgroundColor: "#7C4DFF",
+                  "&:hover": {
+                    backgroundColor: "#28a745",
+                  },
+                }),
+              },
+              {
+                props: { variant: "upload" },
+                style: ({ theme }) => ({
+                  color: theme.palette.primary.contrastText,
+                  backgroundColor: "#00BFA5",
+                  "&:hover": {
+                    backgroundColor: "#009e88",
+                  },
+                }),
+              },
+            ],
           },
           MuiTextField: {
             styleOverrides: {

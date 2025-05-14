@@ -12,7 +12,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import { useColorMode } from "../../Theme/ThemeProvider";
 import Menu from "@mui/material/Menu";
-import Logos from "../../assets/MiNegocio.png";
+import Logos from "../../assets/MiNegocio.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 

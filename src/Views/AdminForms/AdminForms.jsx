@@ -18,7 +18,7 @@ export default function AdminForms() {
     <Box sx={{ padding: 2, textAlign: "center" }}>
       <Box sx={{ marginBottom: 4 }}>
         <Typography variant="h4" sx={{ color: "#8B3A3A", fontWeight: "bold" }}>
-           {saludo} {name}, ¿Qué vamos a hacer hoy?
+          {saludo} {name}, ¿Qué vamos a hacer hoy?
         </Typography>
       </Box>
 
@@ -35,14 +35,6 @@ export default function AdminForms() {
               to="/vistacotizacion"
               variant="contained"
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
               COTIZACIÓN
             </Button>
@@ -55,14 +47,6 @@ export default function AdminForms() {
               to="/vistacuentadecobro"
               variant="contained"
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
               CUENTA DE COBRO
             </Button>
@@ -75,14 +59,6 @@ export default function AdminForms() {
               to="/vistacreaequipo"
               variant="contained"
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
               CREAR EQUIPO
             </Button>
@@ -95,14 +71,6 @@ export default function AdminForms() {
               to="/vistaseleccionarequipo"
               variant="contained"
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
               EDITAR o ELIMINAR EQUIPO
             </Button>
@@ -115,14 +83,6 @@ export default function AdminForms() {
               to="/VistaCrearUsuarios"
               variant="contained"
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
               CREAR USUARIOS
             </Button>
@@ -135,14 +95,6 @@ export default function AdminForms() {
               to="/VistaEliminarUsuario"
               variant="contained"
               fullWidth
-              sx={{
-                height: "45px",
-                color: "#ffffff",
-                backgroundColor: "#1E90FF",
-                "&:hover": {
-                  backgroundColor: "#4682B4",
-                },
-              }}
             >
               ELIMINAR USUARIOS
             </Button>
@@ -151,17 +103,8 @@ export default function AdminForms() {
         <Grid item xs={12} sm={6} md={4}>
           <Button
             onClick={handlerLogout}
-            variant="contained"
+            variant="danger"
             fullWidth
-            sx={{
-              height: "45px",
-              color: "#ffffff",
-              backgroundColor: "#1E90FF",
-              "&:hover": {
-                backgroundColor: "#DC143C",
-              },
-              margin: "0 auto",
-            }}
           >
             CERRAR SESIÓN
           </Button>

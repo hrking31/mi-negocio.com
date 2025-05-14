@@ -1,6 +1,4 @@
-import React from "react";
 import Logos from "../../assets/MiNegocio.png";
-
 import {
   Page,
   Text,

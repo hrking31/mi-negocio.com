@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import RotatingImage from "../rotar/rotar";
-import Logos from "../../assets/MiNegocio.png";
+import Logos from "../../assets/MiNegocio.svg";
 
 const LoadingLogo = () => {
   return (
