@@ -7,6 +7,7 @@ import {
   Typography,
   Box,
   Tooltip,
+  useTheme,
 } from "@mui/material";
 import {
   FaTools,
@@ -17,38 +18,33 @@ import {
 } from "react-icons/fa";
 
 export default function Landing() {
+  const theme = useTheme();
 
   return (
-    <Box style={{ backgroundColor: "#fff", color: "#333" }}>
+    <Box>
       <Box
         sx={{
           textAlign: "center",
-          py: 10,
-          backgroundColor: "#3f51b5",
+          py: 8,
           color: "#fff",
         }}
       >
         <Box>
           <Typography
             variant="h2"
-            sx={{ fontWeight: "bold", mb: 0 }}
             gutterBottom
           >
             Mi Negocio.com
           </Typography>
 
-          <Typography
-            variant="h6"
-            sx={{ color: "#FF5733", fontWeight: "bold", mt: 0 }}
-            paragraph
-          >
+          <Typography variant="h5" paragraph>
             La solución todo en uno para gestionar tu negocio, productos, y
             clientes.
           </Typography>
         </Box>
 
         <Typography
-          variant="h6"
+          variant="subtitle1"
           sx={{ maxWidth: 600, margin: "0 auto", mb: 6 }}
         >
           Plataforma web completa para gestionar productos, cotizaciones,
@@ -62,15 +58,11 @@ export default function Landing() {
             state={{ mostrarModal: true }}
             style={{ textDecoration: "none" }}
           >
-            <Button variant="contained" color="secondary" size="large">
-              Ver Demo
-            </Button>
+            <Button variant="contained">Ver Demo</Button>
           </Link>
 
           <Button
             variant="contained"
-            color="secondary"
-            size="large"
             href="https://github.com/hrking31/mi-negocio.com"
             target="_blank"
             rel="noopener noreferrer"
@@ -82,7 +74,7 @@ export default function Landing() {
       </Box>
 
       <Box sx={{ py: 12, px: 3 }}>
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h2" align="center" gutterBottom>
           ¿Qué puede hacer Mi Negocio.com?
         </Typography>
 
@@ -134,15 +126,13 @@ export default function Landing() {
           ¿Listo para conocer más?
         </Typography>
 
-        <Typography variant="body1" sx={{ mb: 6 }}>
+        <Typography variant="subtitle1" sx={{ mb: 6 }}>
           Explora el código fuente o contáctame para colaborar en proyectos.
         </Typography>
 
         <Box sx={{ display: "inline-flex", gap: 3 }}>
           <Button
             variant="contained"
-            color="primary"
-            size="large"
             href="https://github.com/hrking31/mi-negocio.com"
             target="_blank"
             rel="noopener noreferrer"
@@ -157,9 +147,7 @@ export default function Landing() {
             href="mailto:hrking31@gmail.com"
             style={{ textDecoration: "none" }}
           >
-            <Button variant="outlined" color="primary" size="large">
-              Contáctame
-            </Button>
+            <Button variant="outlined">Contáctame</Button>
           </Tooltip>
         </Box>
       </Box>
@@ -186,9 +174,11 @@ function FeatureCard({ icon, title, description }) {
         <Box display="flex" justifyContent="center" mb={2}>
           {icon}
         </Box>
-        <Typography variant="h6" align="center" gutterBottom>
+
+        <Typography variant="h5" align="center" gutterBottom>
           {title}
         </Typography>
+
         <Typography
           variant="body2"
           align="center"

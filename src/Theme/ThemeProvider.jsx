@@ -51,45 +51,44 @@ export const CustomThemeProvider = ({ children }) => {
       palette: {
         mode,
         primary: {
-          light: "#B388FF",
-          main: "#7C4DFF",
-          dark: "#651FFF",
+          light: "#B388FF", // Morado claro (se mantiene)
+          main: "#7C4DFF", // Morado vibrante (se mantiene)
+          dark: "#651FFF", // Morado oscuro (se mantiene)
           contrastText: "#FFFFFF",
         },
         secondary: {
-          light: "#5DF2D6",
-          main: "#00BFA5",
-          dark: "#008E76",
+          light: "#63E6BE", // Verde menta claro
+          main: "#20C997", // Verde menta vibrante
+          dark: "#0CA678", // Verde menta oscuro
           contrastText: "#FFFFFF",
         },
         success: {
-          main: "#4CB944",
+          main: "#40C057", // Verde éxito
           contrastText: "#FFFFFF",
         },
         warning: {
-          main: "#FFD166",
+          main: "#FFD43B", // Amarillo mostaza
           contrastText: "#1A1A1A",
         },
         error: {
-          main: "#D64045",
+          main: "#FA5252", // Rojo coral
           contrastText: "#FFFFFF",
         },
         info: {
-          main: "#0288d1",
+          main: "#4DABF7", // Azul cielo
           contrastText: "#FFFFFF",
         },
-
         background: {
-          default: mode === "light" ? "#F9F9F9" : "#121212",
-          paper: mode === "light" ? "#FFFFFF" : "#1E1E1E",
+          default: mode === "light" ? "#F8F9FA" : "#212529", // Gris muy claro / Gris oscuro
+          paper: mode === "light" ? "#20C997" : "#7C4DFF", // Verde menta / Morado
         },
         text: {
-          primary: mode === "light" ? "#111" : "#E0E0E0",
-          secondary: mode === "light" ? "#555" : "#A0AEC0",
+          primary: mode === "light" ? "#212529" : "#E9ECEF", // Negro suave / Blanco roto
+          secondary: mode === "light" ? "#495057" : "#ADB5BD", // Gris medio / Gris claro
         },
         custom: {
-          primary: mode === "light" ? "#F7F7F7" : "#FFD166",
-          secondary: mode === "light" ? "#3A5169" : "#FFD166",
+          primary: mode === "light" ? "#F8F9FA" : "#63E6BE", // Gris claro / Verde menta claro
+          secondary: mode === "light" ? "#7C4DFF" : "#20C997", // Morado / Verde menta
         },
       },
       typography: {
@@ -101,7 +100,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontSize: "2.5rem",
           lineHeight: 1.2,
           letterSpacing: "-0.01562em",
-          color: mode === "light" ? "#F7F7F7" : "#FFD166",
+          color: mode === "light" ? "#343A40" : "#E9ECEF",
 
           "@media (max-width:1200px)": {
             fontSize: "2.5rem",
@@ -124,7 +123,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontWeight: 600,
           fontSize: "2.25rem", // 36px base
           lineHeight: 1.3,
-          color: mode === "light" ? "#F7F7F7" : "#FFD166",
+          color: mode === "light" ? "#495057" : "#DEE2E6",
 
           "@media (max-width:1200px)": {
             fontSize: "2rem", // 32px
@@ -144,7 +143,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontFamily: '"Montserrat", sans-serif',
           fontWeight: 600,
           fontSize: "1.2rem",
-          color: mode === "light" ? "#3A5169" : "#FFD166",
+          color: mode === "light" ? "#7C4DFF" : "#20C997",
 
           "@media (max-width:1200px)": {
             fontSize: "1.1rem", // lg
@@ -164,7 +163,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontFamily: '"Open Sans", sans-serif',
           fontWeight: 600,
           fontSize: "1rem",
-          color: mode === "light" ? "#3A5169" : "#A0AEC0",
+          color: mode === "light" ? "#6C757D" : "#ADB5BD",
 
           "@media (max-width:1200px)": {
             fontSize: "0.95rem", // lg
@@ -184,7 +183,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontFamily: '"Open Sans", sans-serif',
           fontWeight: 600,
           fontSize: "0.875rem",
-          color: mode === "light" ? "#3A5169" : "#A0AEC0",
+          color: mode === "light" ? "#6C757D" : "#ADB5BD",
 
           "@media (max-width:1200px)": {
             fontSize: "0.85rem", // lg
@@ -205,7 +204,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontWeight: 400,
           fontSize: "1rem", // >= md
           lineHeight: 1.5,
-          color: mode === "light" ? "#1E2A3A" : "#F7F7F7",
+          color: mode === "light" ? "#495057" : "#E9ECEF",
 
           "@media (max-width:1200px)": {
             fontSize: "0.95rem", // lg
@@ -226,7 +225,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontWeight: 400,
           fontSize: "0.875rem",
           lineHeight: 1.43,
-          color: mode === "light" ? "#1E2A3A" : "#F7F7F7",
+          color: mode === "light" ? "#6C757D" : "#DEE2E6",
 
           "@media (max-width:1200px)": {
             fontSize: "0.85rem", // lg
@@ -254,7 +253,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontFamily: '"Open Sans", sans-serif',
           fontWeight: 400,
           fontSize: "0.75rem",
-          color: mode === "light" ? "#5C6B73" : "#A0AEC0",
+          color: mode === "light" ? "#6C757D" : "#ADB5BD",
         },
 
         overline: {
@@ -262,7 +261,7 @@ export const CustomThemeProvider = ({ children }) => {
           fontWeight: 400,
           fontSize: "0.625rem",
           textTransform: "uppercase",
-          color: mode === "light" ? "#5C6B73" : "#A0AEC0",
+          color: mode === "light" ? "#6C757D" : "#ADB5BD",
         },
       },
 

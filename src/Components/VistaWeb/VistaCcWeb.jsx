@@ -60,7 +60,7 @@ export default function VistaCcWeb() {
               lineHeight: "1.2",
             }}
           >
-            FERREQUIPOS DE LA COSTA
+            Mi negocio.com
           </Typography>
 
           <Typography
@@ -71,9 +71,11 @@ export default function VistaCcWeb() {
               textAlign: "center",
             }}
           >
-            Alquiler de equipos para la construcción
+            La solución todo en uno para gestionar{" "}
+            {isSmallScreen ? <br /> : " "}tu negocio,
+            {!isSmallScreen ? <br /> : " "} productos, y clientes.
             <br />
-            Nit: 22.736.950 - 1
+            Nit: 72.272.605 - 1
           </Typography>
         </Grid>
       </Grid>
@@ -152,7 +154,7 @@ export default function VistaCcWeb() {
           m: "20px ",
         }}
       >
-        FERREQUIPOS DE LA COSTA
+        Mi negocio.com
       </Typography>
 
       <Typography
@@ -220,11 +222,11 @@ export default function VistaCcWeb() {
             lineHeight: "1.2",
           }}
         >
-          Kra 38 # 108 – 23 Tel 605 3356050 - 311 6576633 - 310 6046465
+          hrking31@gmail.com
           <br />
-          Ferrequipos07@hotmail.com
+          hrking31@hotmail.com
           <br />
-          Ferrequiposdelacosta.com
+          Cra. 68 #74-158 Tel 605 3258759 - 302 8446805
           <br />
           BARRANQUILLA - COLOMBIA
         </Typography>

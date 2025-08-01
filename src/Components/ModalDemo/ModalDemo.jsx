@@ -19,10 +19,9 @@ export default function ModalDemo({ open, onClose }) {
             display: "flex",
             alignItems: "center",
             gap: 1,
-            color: "primary.main",
           }}
         >
-          <InfoIcon color="primary" />
+          <InfoIcon  />
           Acceso Demo
         </DialogTitle>
 
@@ -35,13 +34,13 @@ export default function ModalDemo({ open, onClose }) {
 
               <Typography
                 variant="body2"
-                sx={{ mt: 2, fontStyle: "italic", color: "text.secondary" }}
+                sx={{ mt: 2, fontStyle: "italic"}}
               >
                 Usa esta usuario para acceder como administrador.
               </Typography>
               <Typography
                 variant="body1"
-                sx={{ mt: 3, fontWeight: "bold", color: "primary.main" }}
+                sx={{ mt: 3, fontWeight: "bold"}}
               >
                 ¡Crea tu producto y comienza a probar la app!
               </Typography>
@@ -55,7 +54,7 @@ export default function ModalDemo({ open, onClose }) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={onClose} variant="contained" color="primary">
+          <Button onClick={onClose} variant="contained" >
             Empezar Demo
           </Button>
         </DialogActions>

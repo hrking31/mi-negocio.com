@@ -112,10 +112,13 @@ const VistaCotPdf = ({ values }) => {
             <Image style={styles.logo} src={Logo} />
           </View>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>FERREQUIPOS DE LA COSTA</Text>
+            <Text style={styles.title}> Mi negocio.com</Text>
             <View style={styles.subHeader}>
-              <Text>Alquiler de equipos para la construcción</Text>
-              <Text>Nit: 22.736.950 - 1</Text>
+              <Text>
+                La solución todo en uno para gestionar tu negocio,{"\n"}
+                productos, y clientes.
+              </Text>
+              <Text> Nit: 72.272.605 - 1</Text>
             </View>
           </View>
         </View>
@@ -146,11 +149,9 @@ const VistaCotPdf = ({ values }) => {
         </View>
 
         <View style={styles.piePagina}>
-          <Text>ferrequiposdelacosta.com</Text>
-          <Text>Ferrequipos07@hotmail.com</Text>
-          <Text>
-            Kra 38 # 108 – 23 Tel 605 3356050 - 311 6576633 - 310 6046465
-          </Text>
+          <Text> hrking31@gmail.com</Text>
+          <Text> hrking31@hotmail.com</Text>
+          <Text>Cra. 68 #74-158 Tel 605 3258759 - 302 8446805</Text>
           <Text>BARRANQUILLA - COLOMBIA</Text>
         </View>
       </Page>

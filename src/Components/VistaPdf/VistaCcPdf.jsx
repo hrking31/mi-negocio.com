@@ -13,7 +13,7 @@ import {
 const styles = StyleSheet.create({
   page: {
     fontFamily: "Helvetica",
-    padding: "40px",
+    padding: "30px",
     maxWidth: "600px",
   },
   header: {
@@ -117,10 +117,13 @@ const VistaCcPdf = ({ values }) => {
             <Image style={styles.logo} src={Logo} />
           </View>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>FERREQUIPOS DE LA COSTA</Text>
+            <Text style={styles.title}>Mi negocio.com</Text>
             <View style={styles.subHeader}>
-              <Text>Alquiler de equipos para la construcción</Text>
-              <Text>Nit: 22.736.950 - 1</Text>
+              <Text>
+                La solución todo en uno para gestionar tu negocio,{"\n"}
+                productos, y clientes.
+              </Text>
+              <Text> Nit: 72.272.605 - 1</Text>
             </View>
           </View>
         </View>
@@ -138,7 +141,7 @@ const VistaCcPdf = ({ values }) => {
             <Text>Obra: {values.value.obra}</Text>
           </View>
           <Text style={styles.cotizacion}>DEBE A</Text>
-          <Text style={styles.cotizacion}>FERREQUIPOS DE LA COSTA</Text>
+          <Text style={styles.cotizacion}>Mi negocio.com</Text>
           <Text style={[styles.text, styles.centeredText]}>
             LA SUMA DE: {values.value.total}
           </Text>
@@ -161,12 +164,10 @@ const VistaCcPdf = ({ values }) => {
         </View>
 
         <View style={styles.piePagina}>
-          <Text>ferrequiposdelacosta.com</Text>
-          <Text>Ferrequipos07@hotmail.com</Text>
-          <Text>
-            Kra 38 # 108 – 23 Tel 605 3356050 - 311 6576633 - 310 6046465
-          </Text>
-          <Text>BARRANQUILLA - COLOMBIA</Text>
+             <Text> hrking31@gmail.com</Text>
+             <Text> hrking31@hotmail.com</Text>
+             <Text>Cra. 68 #74-158 Tel 605 3258759 - 302 8446805</Text>
+             <Text>BARRANQUILLA - COLOMBIA</Text>
         </View>
       </Page>
     </Document>
