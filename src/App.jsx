@@ -1,29 +1,72 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  Home,
-  Login,
   Landing,
+  Home,
   Detail,
   AdminForms,
   VistaCotizacion,
   VistaCuentaDeCobro,
   VistaCreaEquipo,
   VistaSeleccionarEquipo,
-  VistaEditarEquipo,
   VistaEliminarEquipo,
+  VistaEditarEquipo,
   VistaCrearUsuarios,
   VistaEliminarUsuario,
   VistaNoAutorizada,
-} from "./Views";
+  VistaCart,
+} from "./Views/index.js";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { ProtectedRoutes } from "./Components/ProtectedRoutes/ProtectedRoutes";
-import NavBar from "./Components/NavBar/NavBar";
+import { ProtectedRoutes } from "./Components/ProtectedRoutes/ProtectedRoutes.jsx";
+import NavBar from "./Components/NavBar/NavBar.jsx";
+import { addToCart } from "./Store/Slices/cartSlice.js";
+import { setCliente } from "./Store/Slices/clienteSlice.js";
 
 function App() {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.cart.items);
+  const cliente = useSelector((state) => state.cliente);
+
+  useEffect(() => {
+    if (items.length === 0) {
+      const storedCart = localStorage.getItem("cart");
+      if (storedCart) {
+        const parsed = JSON.parse(storedCart);
+        parsed.items.forEach((item) => {
+          dispatch(addToCart(item));
+        });
+      }
+    }
+
+    const isClienteVacio = Object.entries(cliente).every(([key, value]) => {
+      if (typeof value === "object" && value !== null) {
+        return Object.values(value).every((v) => v === "");
+      }
+      return value === "";
+    });
+    if (isClienteVacio) {
+      const storedCliente = localStorage.getItem("datosCliente");
+
+      if (storedCliente) {
+        const parsedCliente = JSON.parse(storedCliente);
+        dispatch(setCliente(parsedCliente));
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      localStorage.setItem("cart", JSON.stringify({ items }));
+    } else {
+      localStorage.removeItem("cart");
+    }
+  }, [items]);
 
   return (
     <div>
       {location.pathname !== "/" && <NavBar />}
+
       <Routes>
         <Route
           path="/adminforms"
@@ -120,9 +163,9 @@ function App() {
         />
         <Route path="/" element={<Landing />} />
         <Route path="/Home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
         <Route exact path="/detail/:id" element={<Detail />} />
         <Route path="/vistanoautorizada" element={<VistaNoAutorizada />} />
+        <Route path="/vistacart" element={<VistaCart />} />
       </Routes>
     </div>
   );

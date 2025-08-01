@@ -1,4 +1,6 @@
-import Logos from "../../assets/MiNegocio.png";
+import React from "react";
+import Logo from "../../assets/MiNegocio.png";
+
 import {
   Page,
   Text,
@@ -107,7 +109,7 @@ const VistaCotPdf = ({ values }) => {
       <Page size="letter" style={styles.page}>
         <View style={styles.header}>
           <View style={styles.logo}>
-            <Image style={styles.logo} src={Logos} />
+            <Image style={styles.logo} src={Logo} />
           </View>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>FERREQUIPOS DE LA COSTA</Text>
@@ -144,9 +146,11 @@ const VistaCotPdf = ({ values }) => {
         </View>
 
         <View style={styles.piePagina}>
-          <Text>Ferrequiposdelacosta.com</Text>
+          <Text>ferrequiposdelacosta.com</Text>
           <Text>Ferrequipos07@hotmail.com</Text>
-          <Text>Kra 38 # 108 – 23 Tel 2511118 - 3116576633 - 3106046465</Text>
+          <Text>
+            Kra 38 # 108 – 23 Tel 605 3356050 - 311 6576633 - 310 6046465
+          </Text>
           <Text>BARRANQUILLA - COLOMBIA</Text>
         </View>
       </Page>

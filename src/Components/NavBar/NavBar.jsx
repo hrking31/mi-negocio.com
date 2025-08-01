@@ -1,111 +1,100 @@
-import React from "react";
+import { useDispatch } from "react-redux";
 import {
   AppBar,
   Toolbar,
-  IconButton,
   Typography,
-  Grid,
   Box,
+  IconButton,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
-import { Brightness4, Brightness7 } from "@mui/icons-material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuItem from "@mui/material/MenuItem";
-import { useColorMode } from "../../Theme/ThemeProvider";
-import Menu from "@mui/material/Menu";
-import Logos from "../../assets/MiNegocio.svg";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useTheme } from "@mui/material/styles";
+import { clearSearchEquipo } from "../../Store/Slices/searchSlice";
+import Logo from "../../assets/MiNegocio.png";
+import { useNavigate } from "react-router-dom";
+import CartContador from "../CartContador/CartContador.jsx";
 
 export default function MenuAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const theme = useTheme();
-  const { toggleColorMode } = useColorMode();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery("(max-width:915px)");
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleLogoClick = () => {
+    dispatch(clearSearchEquipo());
+    navigate("/home");
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleAccountClick = () => {
-    navigate("/login");
-    handleClose();
+  const handlecartClick = () => {
+    navigate("/vistacart");
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Grid item>
-            <Box>
-              <NavLink to="/home">
-                <img
-                  src={Logos}
-                  alt="logo"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    maxWidth: "100%",
-                    maxHeight: "60px",
-                    height: "auto",
-                  }}
-                />
-              </NavLink>
-            </Box>
-          </Grid>
+      <AppBar
+        position="fixed"
+        sx={{
+          top: isSmallScreen ? "auto" : 0,
+          bottom: isSmallScreen ? 0 : "auto",
+          boxShadow: theme.shadows[4],
+          zIndex: theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            px: 2,
+          }}
+        >
+          <Box
+            onClick={handleLogoClick}
+          >
+            <img
+              src={Logo}
+              alt="logo"
+              style={{
+                display: "block",
+                maxWidth: "clamp(150px, 25vw, 300px)",
+                maxHeight: "clamp(40px, 5vw, 80px)",
+              }}
+            />
+          </Box>
+
           <Typography
-            variant="h4"
-            component="h1"
+            variant="h1"
             sx={{
               flexGrow: 1,
               textAlign: "center",
-              fontSize: {
-                xs: "1.5rem",
-                sm: "2rem",
+            }}
+          >
+            {isSmallScreen ? "Mi negocio" : "Mi negocio.com"}
+          </Typography>
+
+          <IconButton
+            onClick={handlecartClick}
+            disableRipple
+            sx={{
+              cursor: "pointer",
+              p: 0.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color:
+                theme.palette.mode === "light"
+                  ? theme.palette.primary.light
+                  : theme.palette.secondary.light,
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+              "&:focus": {
+                outline: "none",
               },
             }}
           >
-            Mi negocio.com
-          </Typography>
-          <div>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <IconButton onClick={toggleColorMode}>
-              {theme.palette.mode === "dark" ? (
-                <Brightness7 />
-              ) : (
-                <Brightness4 />
-              )}
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleAccountClick}>Mi cuenta</MenuItem>
-            </Menu>
-          </div>
+            <CartContador size={isXs ? 28 : 38} />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </Box>

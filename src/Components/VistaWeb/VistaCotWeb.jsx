@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import Logos from "../../assets/MiNegocio.png";
+import Logo from "../../assets/MiNegocio.png";
 import { Box, Typography, Grid, useTheme, useMediaQuery } from "@mui/material";
 
 export default function VistaCotWeb() {
@@ -26,14 +26,18 @@ export default function VistaCotWeb() {
     >
       <Grid
         container
-        spacing={2}
-        direction={isSmallScreen ? "column" : "row"}
+        spacing={1}
+        direction={isSmallScreen ? "row" : "row"}
         alignItems="center"
-        sx={{ marginBottom: "20px" }}
+        justifyContent="center"
+        sx={{
+          marginBottom: "20px",
+          textAlign: isSmallScreen ? "left" : "center",
+        }}
       >
         <Grid item>
           <img
-            src={Logos}
+            src={Logo}
             alt="Logo"
             style={{
               width: isSmallScreen ? "60px" : "100px",
@@ -41,12 +45,12 @@ export default function VistaCotWeb() {
             }}
           />
         </Grid>
+
         <Grid item>
           <Typography
-            variant="h6"
+            variant="h5"
             component="div"
             sx={{
-              fontSize: isSmallScreen ? "16px" : "18px",
               color: "blue",
               textAlign: "center",
               lineHeight: "1.2",
@@ -54,11 +58,11 @@ export default function VistaCotWeb() {
           >
             FERREQUIPOS DE LA COSTA
           </Typography>
+
           <Typography
             variant="subtitle2"
             component="div"
             sx={{
-              fontSize: isSmallScreen ? "12px" : "14px",
               color: "red",
               textAlign: "center",
             }}
@@ -69,10 +73,10 @@ export default function VistaCotWeb() {
           </Typography>
         </Grid>
       </Grid>
+
       <Typography
-        variant="body1"
+        variant="subtitle2"
         sx={{
-          fontSize: isSmallScreen ? "12px" : "14px",
           textAlign: "left",
           marginBottom: "10px",
         }}
@@ -87,9 +91,9 @@ export default function VistaCotWeb() {
       </Typography>
 
       <Typography
-        variant="h4"
+        variant="h5"
         sx={{
-          fontSize: isSmallScreen ? "18px" : "22px",
+          color: theme.palette.mode === "light" ? "#3A5169" : "#A0AEC0",
           textAlign: "center",
           margin: "20px 0",
         }}
@@ -105,48 +109,42 @@ export default function VistaCotWeb() {
         >
           <Grid item xs={6}>
             <Typography
-              variant="body2"
+              variant="subtitle2"
               sx={{
-                fontSize: isSmallScreen ? "12px" : "14px",
                 wordBreak: "break-word",
                 whiteSpace: "normal",
               }}
             >
-              {item.description}
+              {item.quantity} {item.description}
             </Typography>
           </Grid>
+
           <Grid item xs={6} sx={{ textAlign: "right" }}>
-            <Typography
-              variant="body2"
-              sx={{ fontSize: isSmallScreen ? "12px" : "14px" }}
-            >
-              {item.subtotal}
-            </Typography>
+            <Typography variant="subtitle1">{item.subtotal}</Typography>
           </Grid>
         </Grid>
       ))}
+
       <Typography
-        variant="h6"
+        variant="subtitle1"
         sx={{
-          fontSize: isSmallScreen ? "16px" : "18px",
-          fontWeight: "bold",
           textAlign: "right",
-          marginTop: "20px",
+          mt: "20px",
         }}
       >
         Total: {total}
       </Typography>
 
-      <Box sx={{ marginTop: "40px", textAlign: "center" }}>
+      <Box sx={{ mt: "40px", textAlign: "center" }}>
         <Typography
           variant="caption"
           sx={{
-            fontSize: isSmallScreen ? "10px" : "12px",
+            fontSize: isSmallScreen ? "0.625rem" : "0.75rem",
             color: "blue",
             lineHeight: "1.2",
           }}
         >
-          Kra 38 # 108 – 23 Tel 2511118 - 3116576633 - 3106046465
+          Kra 38 # 108 – 23 Tel 605 3356050 - 311 6576633 - 310 6046465
           <br />
           Ferrequipos07@hotmail.com
           <br />

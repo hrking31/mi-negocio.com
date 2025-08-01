@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -14,11 +15,11 @@ import {
   FaGoogle,
   FaCogs,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 export default function Landing() {
+
   return (
-    <div style={{ backgroundColor: "#fff", color: "#333" }}>
+    <Box style={{ backgroundColor: "#fff", color: "#333" }}>
       <Box
         sx={{
           textAlign: "center",
@@ -35,6 +36,7 @@ export default function Landing() {
           >
             Mi Negocio.com
           </Typography>
+
           <Typography
             variant="h6"
             sx={{ color: "#FF5733", fontWeight: "bold", mt: 0 }}
@@ -44,6 +46,7 @@ export default function Landing() {
             clientes.
           </Typography>
         </Box>
+
         <Typography
           variant="h6"
           sx={{ maxWidth: 600, margin: "0 auto", mb: 6 }}
@@ -52,22 +55,29 @@ export default function Landing() {
           cuentas de cobro y usuarios. Ideal para negocios de alquiler, venta o
           servicios.
         </Typography>
+
         <Box sx={{ display: "inline-flex", gap: 3 }}>
-          <Link to="/home" style={{ textDecoration: "none" }}>
+          <Link
+            to="/home"
+            state={{ mostrarModal: true }}
+            style={{ textDecoration: "none" }}
+          >
             <Button variant="contained" color="secondary" size="large">
               Ver Demo
             </Button>
           </Link>
-          <a
+
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
             href="https://github.com/hrking31/mi-negocio.com"
             target="_blank"
             rel="noopener noreferrer"
             style={{ textDecoration: "none" }}
           >
-            <Button variant="contained" color="secondary" size="large">
-              Código en GitHub
-            </Button>
-          </a>
+            Código en GitHub
+          </Button>
         </Box>
       </Box>
 
@@ -75,6 +85,7 @@ export default function Landing() {
         <Typography variant="h4" align="center" gutterBottom>
           ¿Qué puede hacer Mi Negocio.com?
         </Typography>
+
         <Grid container spacing={4} justifyContent="center">
           <Grid item xs={12} sm={6} md={4}>
             <FeatureCard
@@ -83,6 +94,7 @@ export default function Landing() {
               description="Crea, edita y elimina productos con imágenes desde Firebase. Control total desde el panel de administración."
             />
           </Grid>
+
           <Grid item xs={12} sm={6} md={4}>
             <FeatureCard
               icon={<FaUserShield size={30} />}
@@ -90,6 +102,7 @@ export default function Landing() {
               description="Autenticación con Firebase y asignación de roles personalizados para controlar el acceso al sistema."
             />
           </Grid>
+
           <Grid item xs={12} sm={6} md={4}>
             <FeatureCard
               icon={<FaFilePdf size={30} />}
@@ -97,6 +110,7 @@ export default function Landing() {
               description="Visualiza cotizaciones y cuentas de cobro en PDF en tiempo real y descárgalas con membrete personalizado."
             />
           </Grid>
+
           <Grid item xs={12} sm={6} md={4}>
             <FeatureCard
               icon={<FaGoogle size={30} />}
@@ -104,6 +118,7 @@ export default function Landing() {
               description="Base de datos en tiempo real, almacenamiento en la nube y autenticación, todo con Firebase."
             />
           </Grid>
+
           <Grid item xs={12} sm={6} md={4}>
             <FeatureCard
               icon={<FaCogs size={30} />}
@@ -118,33 +133,37 @@ export default function Landing() {
         <Typography variant="h5" gutterBottom>
           ¿Listo para conocer más?
         </Typography>
+
         <Typography variant="body1" sx={{ mb: 6 }}>
           Explora el código fuente o contáctame para colaborar en proyectos.
         </Typography>
+
         <Box sx={{ display: "inline-flex", gap: 3 }}>
-          <a
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
             href="https://github.com/hrking31/mi-negocio.com"
             target="_blank"
             rel="noopener noreferrer"
             style={{ textDecoration: "none" }}
           >
-            <Button variant="contained" color="primary" size="large">
-              Ver en GitHub
+            Ver en GitHub
+          </Button>
+
+          <Tooltip
+            title="hrking31@gmail.com"
+            arrow
+            href="mailto:hrking31@gmail.com"
+            style={{ textDecoration: "none" }}
+          >
+            <Button variant="outlined" color="primary" size="large">
+              Contáctame
             </Button>
-          </a>
-          <Tooltip title="hrking31@gmail.com" arrow>
-            <a
-              href="mailto:hrking31@gmail.com"
-              style={{ textDecoration: "none" }}
-            >
-              <Button variant="outlined" color="primary" size="large">
-                Contáctame
-              </Button>
-            </a>
           </Tooltip>
         </Box>
       </Box>
-    </div>
+    </Box>
   );
 }
 

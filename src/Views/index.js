@@ -1,7 +1,5 @@
-// import Landing from "./Landing/Landing";
-import Home from "./Home/Home";
-import Login from "../Views/VistaLogin/VistaLogin";
 import Landing from "./Landing/Landing";
+import Home from "./Home/Home";
 import Detail from "./Detail/Detail";
 import AdminForms from "./AdminForms/AdminForms";
 import VistaCotizacion from "../Views/VistaCotizacion/VistaCotizacion";
@@ -13,11 +11,11 @@ import VistaEditarEquipo from "../Views/VistaEditarEquipo/VistaEditarEquipo";
 import VistaCrearUsuarios from "../Views/VistaCrearUsuarios/VistaCrearUsuarios";
 import VistaEliminarUsuario from "../Views/VistaEliminarUsuario/VistaEliminarUsuario";
 import VistaNoAutorizada from "../Views/VistaNoAutorizada/VistaNoAutorizada";
+import VistaCart from "../Views/VistaCart/VistaCart";
 
 export {
-  Home,
-  Login,
   Landing,
+  Home,
   Detail,
   AdminForms,
   VistaCotizacion,
@@ -29,4 +27,5 @@ export {
   VistaCrearUsuarios,
   VistaEliminarUsuario,
   VistaNoAutorizada,
+  VistaCart,
 };

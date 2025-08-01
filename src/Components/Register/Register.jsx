@@ -15,16 +15,18 @@ import {
   FormControl,
   Tooltip,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, setDoc } from "firebase/firestore";
-import { db, auth } from "../../Components/Firebase/Firebase";
+import { db } from "../../Components/Firebase/Firebase";
 import { togglePasswordVisibility } from "../../Store/Slices/passwordSlice";
 import RolesPermisos from "../RolesPermisos/RolesPermisos";
 
 export default function Register() {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const [user, setUser] = useState({ name: "", email: "", password: "" });
   const [roleSeleccionado, setRoleSeleccionado] = useState("");
   const [generoSeleccionado, setGeneroSeleccionado] = useState("");
@@ -143,10 +145,6 @@ export default function Register() {
       onSubmit={handleSubmit}
       maxWidth={400}
       mx="auto"
-      mt={5}
-      p={3}
-      borderRadius={2}
-      boxShadow={3}
       display="flex"
       flexDirection="column"
       gap={2}
@@ -163,17 +161,18 @@ export default function Register() {
         onChange={handleChange}
         fullWidth
       />
+
       <FormControl fullWidth>
-        <InputLabel id="genero-label">Genero</InputLabel>
+        <InputLabel id="genero-label">Género</InputLabel>
         <Select
           labelId="genero-label"
+          label="Género"
           name="genero"
           value={generoSeleccionado || ""}
           onChange={(e) => setGeneroSeleccionado(e.target.value)}
-          label="Genero"
         >
           <MenuItem value="" disabled>
-            Selecciona un Genero
+            Selecciona un Género
           </MenuItem>
 
           <MenuItem value="femenino">
@@ -203,18 +202,19 @@ export default function Register() {
         onChange={handleChange}
         fullWidth
         InputProps={{
-          style: { color: "#00008B" },
+          style: { color: theme.palette.text.primary },
           endAdornment: (
             <IconButton onClick={() => dispatch(togglePasswordVisibility())}>
               {passwordVisible ? (
-                <FaEyeSlash color="#00008B" />
+                <FaEyeSlash color={theme.palette.primary.main} />
               ) : (
-                <FaEye color="#00008B" />
+                <FaEye color={theme.palette.primary.main} />
               )}
             </IconButton>
           ),
         }}
       />
+
       <FormControl fullWidth>
         <InputLabel id="rol-label">Rol</InputLabel>
         <Select
@@ -227,6 +227,7 @@ export default function Register() {
           <MenuItem value="" disabled>
             Selecciona un Rol
           </MenuItem>
+
           <MenuItem value="administrador">
             <Tooltip title="Acceso Total" placement="right">
               <Box component="span">Administrador</Box>
@@ -253,21 +254,38 @@ export default function Register() {
         </Select>
       </FormControl>
 
-      <Button variant="contained" color="primary" type="submit" fullWidth>
+      <Button variant="success" type="submit" fullWidth>
         Registrar
       </Button>
 
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{
+          "&.MuiSnackbar-root": {
+            position: "fixed",
+            top: "50% !important",
+            left: "50% !important",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1300,
+          },
+        }}
       >
         <Alert
-          severity={snackbar.severity}
           onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
           variant="filled"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            bgcolor: (theme) =>
+              theme.palette[snackbar.severity]?.main ||
+              theme.palette.primary.main,
+            color: (theme) =>
+              theme.palette[snackbar.severity]?.contrastText ||
+              theme.palette.primary.contrastText,
+          }}
         >
           {snackbar.message}
         </Alert>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { deleteDoc, doc } from "firebase/firestore";
 import LoadingLogo from "../../Components/LoadingLogo/LoadingLogo";
@@ -11,12 +11,13 @@ import {
   Typography,
   Button,
   Grid,
-  TextField,
+  useTheme,
 } from "@mui/material";
 
 const EliminarEquipo = () => {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
+  const theme = useTheme();
   const equipoSeleccionado = location.state?.equipo;
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -67,23 +68,37 @@ const EliminarEquipo = () => {
   if (loading) return <LoadingLogo />;
 
   return (
-    <Box sx={{ padding: 2 }}>
+    <Box
+      mx="auto"
+      p={2}
+      display="flex"
+      flexDirection="column"
+      sx={{
+        [theme.breakpoints.up("md")]: { width: "60%" },
+      }}
+    >
       <Box sx={{ marginBottom: { xs: 1, sm: 2 }, width: "100%" }}>
+        <Typography variant="h5">
+          Elimina el Equipo
+          <Typography component="span" variant="body2">
+            {" "}
+            {equipoSeleccionado.name}.
+          </Typography>
+        </Typography>
+
         <Typography
-          variant="h4"
+          variant="body2"
           sx={{
-            color: "#8B3A3A",
-            fontWeight: "bold",
+            mb: 4,
+            p: 2,
+            lineHeight: 1.6,
             overflowWrap: "break-word",
-            fontSize: { xs: "h5.fontSize", sm: "h4.fontSize" },
+            wordBreak: "break-word",
+            hyphens: "auto",
+            maxWidth: "100%",
+            whiteSpace: "pre-line",
           }}
         >
-          Elimina Equipo {""}
-          <Box component="span" sx={{ color: "#1976d2" }}>
-            {equipoSeleccionado.name}.
-          </Box>
-        </Typography>
-        <Typography sx={{ color: "#1976d2", mb: 4 }}>
           {equipoSeleccionado.description}
         </Typography>
       </Box>
@@ -92,7 +107,7 @@ const EliminarEquipo = () => {
         <Grid container spacing={2}>
           {equipoSeleccionado.images && equipoSeleccionado.images.length > 0
             ? equipoSeleccionado.images.map((image, index) => (
-                <Grid item xs={12} sm={4} key={index}>
+                <Grid item xs={6} sm={4} key={index}>
                   <Box sx={{ textAlign: "center", mb: 2 }}>
                     <img
                       src={image.url}
@@ -101,8 +116,11 @@ const EliminarEquipo = () => {
                         width: "100px",
                         height: "100px",
                         objectFit: "cover",
+                        borderRadius: 12,
+                        border: "1px solid #e0e0e0",
                       }}
                     />
+
                     <Box
                       sx={{
                         display: "flex",
@@ -111,13 +129,7 @@ const EliminarEquipo = () => {
                         mt: 1,
                       }}
                     >
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontSize: "0.85rem",
-                          color: "#00008B",
-                        }}
-                      >
+                      <Typography variant="body2">
                         {image.name || `Nombre no disponible ${index + 1}`}
                       </Typography>
                     </Box>
@@ -128,21 +140,39 @@ const EliminarEquipo = () => {
         </Grid>
       </Grid>
 
-      <Button
-        variant="contained"
-        // color="error"
-        onClick={handleDelete}
-
-      >
+      <Button variant="danger" fullWidth onClick={handleDelete}>
         Eliminar Equipo
       </Button>
 
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={6000}
+        autoHideDuration={4000}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{
+          "&.MuiSnackbar-root": {
+            position: "fixed",
+            top: "50% !important",
+            left: "50% !important",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1300,
+          },
+        }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{
+            width: "100%",
+            bgcolor: (theme) =>
+              theme.palette[snackbarSeverity]?.main ||
+              theme.palette.primary.main,
+            color: (theme) =>
+              theme.palette[snackbarSeverity]?.contrastText ||
+              theme.palette.primary.contrastText,
+          }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>

@@ -27,9 +27,7 @@ const equiposSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {
-    // puedes agregar más reducers aquí si los necesitas
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchEquiposData.pending, (state) => {
