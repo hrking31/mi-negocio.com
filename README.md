@@ -1,11 +1,16 @@
-# **💼Catálogo Digital Versátil para cualquier tipo de producto**  
+# **💼Catálogo Digital Versátil para cualquier tipo de producto**
 
-## **Descripción**  
-Este proyecto es una aplicación web desarrollada en **React (Vite)** que permite gestionar un **catálogo digital de productos** con funcionalidades **CRUD** (crear, editar y eliminar productos). Además, ofrece la generación de **cotizaciones y cuentas de cobro en formato PDF**, personalizadas con el membrete de la empresa y con opción de descarga.  
+## **Descripción**
 
-Los datos de los productos se almacenan en **Firebase Firestore**, y las imágenes se guardan en **Firebase Storage**.  
+Este proyecto es una aplicación web desarrollada en **React (Vite)** que permite gestionar un **catálogo digital de productos** con funcionalidades **CRUD** (crear, editar y eliminar productos). Además, ofrece la generación de **cotizaciones y cuentas de cobro en formato PDF**, personalizadas con el membrete de la empresa y con opción de descarga.
 
-## **✨Características**  
+Los datos de los productos se almacenan en **Firebase Firestore**, y las imágenes en **Firebase Storage**, garantizando un sistema escalable y en tiempo real.
+
+👉 Accede a la aplicación aquí:
+🌐 [Ver aplicación en línea](https://mi-negocio-30949.web.app/)
+
+## **✨Características**
+
 ✅ Catálogo digital versátil para cualquier tipo de producto  
 ✅ Funcionalidades **CRUD** completas (crear, editar y eliminar productos)  
 ✅ Generación de **cotizaciones** en PDF con membrete de la empresa  
@@ -13,83 +18,97 @@ Los datos de los productos se almacenan en **Firebase Firestore**, y las imágen
 ✅ Uso de **Firebase Firestore** para el almacenamiento de datos  
 ✅ Almacenamiento de imágenes en **Firebase Storage**  
 ✅ Sistema de autenticación con Firebase Authentication que permite a los usuarios acceder según su rol y nivel de permisos asignado  
-✅ Interfaz moderna con **Material-UI (MUI)**  
+✅ Interfaz moderna con **Material-UI (MUI)**
 
-## **Tecnologías Utilizadas 🔧**  
-- **Frontend:** React (Vite), Material-UI (MUI), JavaScript, CSS  
-- **Backend:** Firebase Firestore, Firebase Storage, Firebase Authentication  
-- **Generación de PDFs:** jsPDF  
-- **Estado Global:** Redux Toolkit  
+## **Tecnologías Utilizadas 🔧**
 
-## **Instalación y Configuración**  
+- **Frontend:** React (Vite), Material-UI (MUI), JavaScript, CSS
+- **Backend:** Firebase Firestore, Firebase Storage, Firebase Authentication
+- **Generación de PDFs:** jsPDF
+- **Estado Global:** Redux Toolkit
 
-### **1. Clonar el repositorio**  
-```bash  
+## **Instalación y Configuración**
+
+### **1. Clonar el repositorio**
+
+```bash
 https://github.com/hrking31/mi-negocio.com.git
 ```
 
-### **2. Instalar dependencias**  
-```bash  
-npm install  
+### **2. Instalar dependencias**
+
+```bash
+npm install
 ```
 
-### **3. Configurar Firebase**  
-https://firebase.google.com/docs/web/setup?hl=es-419  
-- Crear un proyecto en **Firebase**  
-- Habilitar **Firestore Database** y **Firebase Storage**  
-- Configurar las reglas de seguridad  
-- Agregar el archivo `FirebaseConfig.js` en `/src/Components/Firebase/FirebaseConfig` con las credenciales de Firebase  
+### **3. Configurar Firebase**
 
-Ejemplo de `FirebaseConfig.js`:  
-```js  
-export const firebaseConfig = {  
-  apiKey: "tu_api_key",  
-  authDomain: "tu_auth_domain",  
-  projectId: "tu_project_id",  
-  storageBucket: "tu_storage_bucket",  
-  messagingSenderId: "tu_messaging_sender_id",  
-  appId: "tu_app_id"  
-};  
+https://firebase.google.com/docs/web/setup?hl=es-419
+
+- Crear un proyecto en **Firebase**
+- Habilitar **Firestore Database** y **Firebase Storage**
+- Configurar las reglas de seguridad
+- Agregar el archivo `FirebaseConfig.js` en `/src/Components/Firebase/FirebaseConfig` con las credenciales de Firebase
+
+Ejemplo de `FirebaseConfig.js`:
+
+```js
+export const firebaseConfig = {
+  apiKey: "tu_api_key",
+  authDomain: "tu_auth_domain",
+  projectId: "tu_project_id",
+  storageBucket: "tu_storage_bucket",
+  messagingSenderId: "tu_messaging_sender_id",
+  appId: "tu_app_id",
+};
 ```
 
-### **4. Ejecutar la aplicación**  
-```bash  
-npm run dev  
+### **4. Ejecutar la aplicación**
+
+```bash
+npm run dev
 ```
 
-La aplicación estará disponible en:  
+La aplicación estará disponible en:
+
 ```
 http://localhost:5173/
 ```
 
-## **Uso de la Aplicación**  
- ⚙️ Panel de Administración (AdminForms):  
-  Un completo dashboard con 6 acciones clave para el control del sistema:
-- **Agregar productos**: Añade nuevos productos con nombre, descripción e imágenes subidas a Firebase Storage. Se guardan en Firestore de forma estructurada.  
-- **Editar productos**: Modifica cualquier detalle del producto (nombre, descripción e imágenes), con la posibilidad de eliminar, cambiar o reordenar las imágenes.  
-- **Eliminar productos**: Elimina tanto el documento del equipo en Firestore como sus imágenes asociadas en Firebase Storage.  
-- **Crear usuarios**: Permite registrar nuevos usuarios en Firebase Authentication y asignarles roles personalizados  
-- **Eliminar usuarios**: Borra permanentemente usuarios del sistema desde Firebase Authentication.  
-- **Crear Cotizaciones y Cuentas de Cobro**: Formularios personalizables para generar cotizaciones y cuentas de cobro profesionales. 
+## **Uso de la Aplicación**
 
-## **Generación de Cotizaciones y Cuentas de Cobro**  
+⚙️ Panel de Administración (AdminForms):  
+ Un completo dashboard con 6 acciones clave para el control del sistema:
+
+- **Agregar productos**: Añade nuevos productos con nombre, descripción e imágenes subidas a Firebase Storage. Se guardan en Firestore de forma estructurada.
+- **Editar productos**: Modifica cualquier detalle del producto (nombre, descripción e imágenes), con la posibilidad de eliminar, cambiar o reordenar las imágenes.
+- **Eliminar productos**: Elimina tanto el documento del equipo en Firestore como sus imágenes asociadas en Firebase Storage.
+- **Crear usuarios**: Permite registrar nuevos usuarios en Firebase Authentication y asignarles roles personalizados
+- **Eliminar usuarios**: Borra permanentemente usuarios del sistema desde Firebase Authentication.
+- **Crear Cotizaciones y Cuentas de Cobro**: Formularios personalizables para generar cotizaciones y cuentas de cobro profesionales.
+
+## **Generación de Cotizaciones y Cuentas de Cobro**
+
 📄 Vista PDF en Tiempo Real + Descarga
 Mientras se diligencian los formularios de cotización o cuenta de cobro, la vista se actualiza en tiempo real mostrando un diseño tipo PDF, listo para impresión o descarga. El PDF incluye:
 
-### **Cotizaciones**  
-Permite ingresar datos como:  
-- **Empresa**: Nombre, NIT, dirección y fecha.  
-- **Productos**: Cantidad, días de alquiler y precio unitario.  
-- **Total**: Se calcula automáticamente con base en los productos seleccionados.  
-- **PDF**: Se genera un archivo PDF con el membrete de la empresa y todos los detalles de la cotización.  
+### **Cotizaciones**
 
-### **Cuentas de Cobro**  
-Permite ingresar manualmente los datos de la empresa, incluyendo:  
-- **Nombre, NIT, dirección y fecha**.  
-- **Detalle del concepto**: Se especifica el motivo del cobro.  
-- **Suma total**: Se genera automáticamente con los valores ingresados.  
-- **PDF**: Se genera un archivo PDF con el membrete de la empresa y la información ingresada.  
+Permite ingresar datos como:
 
+- **Empresa**: Nombre, NIT, dirección y fecha.
+- **Productos**: Cantidad, días de alquiler y precio unitario.
+- **Total**: Se calcula automáticamente con base en los productos seleccionados.
+- **PDF**: Se genera un archivo PDF con el membrete de la empresa y todos los detalles de la cotización.
+
+### **Cuentas de Cobro**
+
+Permite ingresar manualmente los datos de la empresa, incluyendo:
+
+- **Nombre, NIT, dirección y fecha**.
+- **Detalle del concepto**: Se especifica el motivo del cobro.
+- **Suma total**: Se genera automáticamente con los valores ingresados.
+- **PDF**: Se genera un archivo PDF con el membrete de la empresa y la información ingresada.
 
 # 💡 ¿Por qué esta app es especial?
 
@@ -122,23 +141,30 @@ Permite ingresar manualmente los datos de la empresa, incluyendo:
 - Generación de documentos tipo PDF a partir de formularios web
 - Arquitectura escalable, segura y centrada en la experiencia del usuario
 
+## 📸 Capturas de pantalla
 
-## 📸 Capturas de pantalla  
+### Vista Escritorio
 
-### Vista Escritorio  
-<img src="./src/assets/CatalogoPC.png" alt="Vista principal" width="400">  
-
-### Vista Móvil  
-<img src="./src/assets/CatalogoMovil.jpg" alt="Panel de administración" width="200" height="300">  
-
-## **Contribuciones**  
-Si quieres contribuir al proyecto, eres bienvenido. Puedes hacer un **fork**, crear una nueva rama y enviar un **pull request**.  
-
-## **Licencia**  
-Este proyecto está bajo la licencia **MIT**.  
+<div align="center">
+  <img src="./src/assets/11.png" width="100%" />
+  <img src="./src/assets/22.png" width="100%" />
+  <img src="./src/assets/33.png" width="100%" />
+</div>
 
 
+### Vista Móvil
+
+<div align="center">
+  <img src="./src/assets/1.jpg" width="30%" />
+  <img src="./src/assets/2.jpg" width="30%" />
+  <img src="./src/assets/3.jpg" width="30%" />
+</div>
 
 
+## **Contribuciones**
 
+Si quieres contribuir al proyecto, eres bienvenido. Puedes hacer un **fork**, crear una nueva rama y enviar un **pull request**.
 
+## **Licencia**
+
+Este proyecto está bajo la licencia **MIT**.
